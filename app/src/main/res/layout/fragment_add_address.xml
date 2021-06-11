@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dawaya.viewmodels.AddressViewModel" />
+
+    </data>
+    <FrameLayout
+        android:background="@color/white"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+
+            android:id="@+id/addresses_fields_container"
+            android:orientation="vertical"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/add_address_button"
+
+            android:layout_margin="@dimen/_20sdp"
+            >
+
+
+
+
+
+
+
+            <!-- County Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/county_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+
+                >
+
+                <!--County Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/county_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/county"
+
+                    android:text="@={viewModel.addressLiveData.county}"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Street Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/street_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                >
+
+                <!--Street Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/street_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/street"
+
+                    android:text="@={viewModel.addressLiveData.street}"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Building Number Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/building_no_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                >
+
+                <!--Building Number Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/building_no_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/building_number"
+
+                    android:text="@={viewModel.addressLiveData.buildingNo}"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Floor Number Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/floor_no_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                >
+
+                <!--Floor Number Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/floor_no_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/floor_number"
+
+                    android:text="@={viewModel.addressLiveData.floorNo}"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <!-- Apartment Number Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/apartment_no_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                >
+
+                <!--Apartment Number Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/apartment_no_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/apartment_number"
+
+                    android:text="@={viewModel.addressLiveData.apartmentNo}"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        </LinearLayout>
+
+        <!-- android:onClick="@{() -> viewModel.addAddress}"-->
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:id="@+id/add_address_button"
+
+            android:text="@string/add"
+
+
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addresses_fields_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>

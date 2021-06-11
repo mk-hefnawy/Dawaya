@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dawaya.viewmodels.SignInViewModel" />
+
+    </data>
+
+    <!-- Sign In Form -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.SignInActivity">
+
+
+        <!-- Email Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sign_in_email_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:endIconDrawable="@drawable/ic_launcher_background"
+            app:startIconDrawable="@drawable/outline_email_24"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/sign_in_password_container"
+
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+
+
+            >
+            <!-- Email Field  -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_in_email_field"
+            android:text="@={viewModel.signInLiveData.email}"
+            android:hint="@string/email_hint"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <!-- Password Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/sign_in_password_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:endIconDrawable="@drawable/baseline_visibility_24"
+            app:endIconMode="password_toggle"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/sign_in_email_container"
+            app:layout_constraintBottom_toTopOf="@id/sign_in_button"
+
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+
+            >
+            <!-- Password Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sign_in_password_field"
+            android:text="@={viewModel.signInLiveData.password}"
+            android:inputType="textPassword"
+            android:hint="@string/password_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Sign In Button-->
+        <!-- android:onClick="@{() -> viewModel.signIn()}"-->
+        <Button
+            android:id="@+id/sign_in_button"
+            android:text="@string/sign_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/sign_in_password_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            />
+
+        <TextView
+            android:id="@+id/go_to_sign_up"
+            android:text="@string/sign_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@+id/sign_in_button"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- End of Sign In Form -->
+</layout>

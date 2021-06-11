@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dawaya.viewmodels.EditProfileViewModel" />
+
+
+    </data>
+<FrameLayout
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".ui.EditProfileFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sign_up_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+        android:layout_marginTop="65dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+
+        >
+        <!-- First Name Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/first_name_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/email_container"
+
+            app:layout_constraintRight_toLeftOf="@id/last_name_container"
+            app:layout_constraintTop_toTopOf="parent"
+
+            android:paddingEnd="5dp"
+
+            >
+
+            <!-- First Name Field -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/first_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@={viewModel.user.firstName}"
+                android:hint="@string/first_name"
+
+                android:selectAllOnFocus="true"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+        <!-- Last Name Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/last_name_container"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            app:layout_constraintLeft_toRightOf="@id/first_name_container"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/email_container"
+
+            android:paddingLeft="5dp"
+
+
+
+            >
+            <!-- Last Name Field -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/last_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="@={viewModel.user.lastName}"
+                android:hint="@string/last_name"
+
+                android:selectAllOnFocus="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+        <!-- Email Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/email_container"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            app:layout_constraintTop_toBottomOf="@id/last_name_container"
+            app:layout_constraintBottom_toTopOf="@id/phone_number_container"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            >
+            <!-- Email Field -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/email_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="@={viewModel.user.email}"
+                android:hint="@string/email"
+
+                android:selectAllOnFocus="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+
+
+
+        <!-- Phone Number Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_number_container"
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+            app:layout_constraintTop_toBottomOf="@id/email_container"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <!-- Phone Number Field  android:text="@={viewModel.signUpLiveData.phoneNumber}"-->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:text="@={viewModel.user.phoneNumber}"
+
+                android:hint="@string/phone_number"
+
+                android:selectAllOnFocus="true"
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Gender Container-->
+        <LinearLayout
+            android:id="@+id/gender_container"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/phone_number_container"
+            app:layout_constraintBottom_toTopOf="@id/datePicker"
+
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            >
+
+            <TextView
+                android:text="@string/gender"
+                android:textSize="18sp"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+
+                />
+
+            <RadioGroup
+                android:id="@+id/gender_radio_group"
+                android:layout_width="0dp"
+                android:layout_weight="3"
+
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/male_radio_button"
+                    android:text="@string/male"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"/>
+
+                <RadioButton
+                    android:id="@+id/female_radio_button"
+                    android:text="@string/female"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"/>
+
+
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <DatePicker
+            android:id="@+id/datePicker"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:calendarViewShown="false"
+            android:datePickerMode="spinner"
+            android:spinnersShown="true"
+
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/gender_container"
+            app:layout_constraintBottom_toTopOf="@+id/edit_profile_save_button"
+            />
+
+        <!-- Save Button -->
+        <Button
+            android:id="@+id/edit_profile_save_button"
+            android:text="@string/save"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toBottomOf="@id/datePicker"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+
+
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>
+</layout>

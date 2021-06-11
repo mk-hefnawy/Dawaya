@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.dawaya">
+    <!-- Added  android:name="com.example.waddy.utils.App" to get a context -->
+    <!-- Added action SEARCH to HomeActivity -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".utils.App"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:targetApi="m">
+        <activity android:name=".ui.PhoneNumbersActivity"></activity>
+        <activity android:name=".ui.ShippingActivity" />
+        <activity android:name=".ui.WishlistActivity" />
+        <activity android:name=".ui.CartActivity" />
+        <activity android:name=".ui.PrescriptionActivity" />
+        <activity android:name=".ui.SubCategoriesActivity" />
+        <activity android:name=".ui.SettingsActivity" />
+        <activity
+            android:name=".ui.SplashScreenActivity"
+            android:theme="@style/SplashTheme" />
+        <activity
+            android:name=".ui.MyOrdersActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.AddressBookActivity"
+            android:parentActivityName=".ui.HomeActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.HomeActivity"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".ui.SignInActivity"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.SignUpActivity"
+            android:noHistory="true" />
+    </application>
+
+</manifest>

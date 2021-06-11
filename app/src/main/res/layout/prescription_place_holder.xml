@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_alignParentTop="true"
+    android:layout_alignParentStart="true"
+
+    android:layout_margin="@dimen/_20sdp"
+
+    android:layout_width="@dimen/_190sdp"
+    android:layout_height="@dimen/_190sdp"
+     />

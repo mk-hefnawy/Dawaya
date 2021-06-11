@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dawaya.viewmodels.SignUpViewModel" />
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:id="@+id/sign_up_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/sign_up"
+            android:textAlignment="center"
+            android:gravity="center_horizontal"
+            android:textSize="24sp"
+            android:layout_marginTop="15dp"
+
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/sign_up_form"
+            />
+
+        <!-- Sign up Form Inputs -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/sign_up_form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+
+            android:layout_marginTop="65dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="25dp"
+
+            >
+            <!-- First Name Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/first_name_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/email_container"
+
+                app:layout_constraintRight_toLeftOf="@id/last_name_container"
+                app:layout_constraintTop_toTopOf="parent"
+
+                android:paddingEnd="5dp"
+
+                >
+
+                <!-- First Name Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/first_name_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/first_name"
+                    android:text="@={viewModel.signUpLiveData.firstName}"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <!-- Last Name Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/last_name_container"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                app:layout_constraintLeft_toRightOf="@id/first_name_container"
+                app:layout_constraintRight_toRightOf="parent"
+
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/email_container"
+
+                android:paddingLeft="5dp"
+
+
+
+                >
+                <!-- Last Name Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/last_name_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@={viewModel.signUpLiveData.lastName}"
+                    android:hint="@string/last_name" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <!-- Email Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/email_container"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                app:layout_constraintTop_toBottomOf="@id/last_name_container"
+                app:layout_constraintBottom_toTopOf="@id/password_container"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                >
+                <!-- Email Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/email_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@={viewModel.signUpLiveData.email}"
+                    android:hint="@string/email" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <!-- Password Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/password_container"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                app:layout_constraintTop_toBottomOf="@id/email_container"
+                app:layout_constraintBottom_toTopOf="@id/confirm_password_container"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+                <!-- Password Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/password_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@={viewModel.signUpLiveData.password}"
+                    android:hint="@string/password" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+
+
+            <!-- Confirm Password Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirm_password_container"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                app:layout_constraintTop_toBottomOf="@id/password_container"
+                app:layout_constraintBottom_toTopOf="@id/phone_number_container"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+                <!-- Confirm Password Field -->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirm_password_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:hint="@string/confirm_password" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+            <!-- Phone Number Container -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/phone_number_container"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+                app:layout_constraintTop_toBottomOf="@id/confirm_password_container"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
+
+                <!-- Phone Number Field  android:text="@={viewModel.signUpLiveData.phoneNumber}"-->
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/phone_number_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:text="@={viewModel.signUpLiveData.phoneNumber}"
+
+                    android:hint="@string/phone_number" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Gender Container-->
+            <LinearLayout
+                android:id="@+id/gender_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/phone_number_container"
+                app:layout_constraintBottom_toTopOf="@id/datePicker"
+
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="10dp"
+                >
+
+                <TextView
+                    android:text="@string/gender"
+                    android:textSize="18sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+
+                    />
+
+                <RadioGroup
+                    android:id="@+id/gender_radio_group"
+                    android:layout_width="0dp"
+                    android:layout_weight="3"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/male_radio_button"
+                        android:text="@string/male"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                    <RadioButton
+                        android:id="@+id/female_radio_button"
+                        android:text="@string/female"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+
+
+                </RadioGroup>
+
+            </LinearLayout>
+
+            <DatePicker
+                android:id="@+id/datePicker"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:spinnersShown="true"
+
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/gender_container"
+                app:layout_constraintBottom_toTopOf="@+id/sign_up_button"
+                />
+
+            <!-- Sign Up Button -->
+            <Button
+                android:id="@+id/sign_up_button"
+                android:text="@string/sign_up"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+
+                app:layout_constraintTop_toBottomOf="@id/datePicker"
+                app:layout_constraintBottom_toBottomOf="parent"
+
+
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- End of sign up form-->
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

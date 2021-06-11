@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+    <variable
+        name="viewModel"
+        type="com.example.dawaya.viewmodels.AddressViewModel" />
+
+</data>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:id="@+id/edit_address_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:layout_margin="@dimen/_10sdp"
+    >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:text="@string/edit_address"
+        android:textSize="@dimen/_20sdp"
+        android:textStyle="bold"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <!-- County Container -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_county_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+
+        >
+
+        <!--County Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_county_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/county"
+
+            android:selectAllOnFocus="true"
+            android:text="@={viewModel.editAddressLiveData.county}"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Street Container -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_street_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        >
+
+        <!--Street Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_street_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/street"
+
+            android:selectAllOnFocus="true"
+            android:text="@={viewModel.editAddressLiveData.street}"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <!-- Building Number Container -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_building_no_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        >
+
+        <!--Building Number Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_building_no_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/building_number"
+
+            android:selectAllOnFocus="true"
+            android:text="@={viewModel.editAddressLiveData.buildingNo}"
+
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Floor Number Container -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_floor_no_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        >
+
+        <!--Floor Number Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_floor_no_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/floor_number"
+
+            android:selectAllOnFocus="true"
+            android:text="@={viewModel.editAddressLiveData.floorNo}"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <!-- Apartment Number Container -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/edit_apartment_no_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        >
+
+        <!--Apartment Number Field -->
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edit_apartment_no_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/apartment_number"
+
+            android:selectAllOnFocus="true"
+            android:text="@={viewModel.editAddressLiveData.apartmentNo}"
+
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:layout_margin="@dimen/_10sdp">
+
+        <TextView
+            android:id="@+id/edit_address_cancel"
+
+            android:text="@string/cancel"
+            android:textSize="@dimen/_16sdp"
+            android:fontFamily="sans-serif-medium"
+
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/edit_address_ok"
+
+            android:text="@string/ok"
+            android:textSize="@dimen/_16sdp"
+            android:fontFamily="sans-serif-medium"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+
+            />
+
+
+    </LinearLayout>
+
+</LinearLayout>
+</layout>

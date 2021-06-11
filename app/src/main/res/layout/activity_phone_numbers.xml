@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".ui.PhoneNumbersActivity">
+
+    <!-- Tool Bar -->
+    <RelativeLayout
+        android:id="@+id/phone_numbers_tool_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <ImageView
+            android:id="@+id/back_from_phone_numbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+
+            android:layout_margin="@dimen/_10sdp"
+            android:src="@drawable/baseline_arrow_back_ios_black_24"
+            />
+
+
+        <TextView
+            android:id="@+id/phone_numbers_title"
+
+            android:text="@string/my_phone_numbers"
+            android:textSize="@dimen/_20sdp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+
+            android:layout_alignTop="@id/back_from_phone_numbers"
+
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <!-- Fragment Placeholder-->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:id="@+id/add_phone_number_fragment_placeholder"
+
+        app:layout_constraintTop_toBottomOf="@id/phone_numbers_tool_bar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        >
+
+        <!-- Recycler View -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/phone_numbers_recycler_view"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            app:layout_constraintTop_toBottomOf="@+id/tool_bar_layout"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:text="@string/add"
+            android:textSize="@dimen/_13sdp"
+
+            android:padding="@dimen/_10sdp"
+            android:elevation="@dimen/_10sdp"
+
+
+            app:icon="@drawable/baseline_add_24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+
+            android:backgroundTint="@color/grey"
+            android:layout_margin="@dimen/_10sdp"
+
+            />
+
+    </FrameLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

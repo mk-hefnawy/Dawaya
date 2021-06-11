@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    android:layout_margin="@dimen/_10sdp">
+
+    <TextView
+        android:text="@string/delete_this_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textSize="@dimen/_20sdp"
+        android:layout_margin="@dimen/_10sdp"
+
+
+
+        />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:padding="@dimen/_10sdp">
+
+    <TextView
+        android:id="@+id/delete_address_no"
+
+        android:text="@string/no"
+        android:textSize="@dimen/_16sdp"
+        android:fontFamily="sans-serif-medium"
+
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/grey"/>
+
+    <TextView
+        android:id="@+id/delete_address_yes"
+
+        android:text="@string/yes"
+        android:textSize="@dimen/_16sdp"
+        android:fontFamily="sans-serif-medium"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+
+        />
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+
+    >
+
+    <!-- android:fitsSystemWindows="true"  so the nav view will be on top of other views-->
+    <!--  tools:openDrawer="start"  so the nav view will appear only on the side not filing the whole screen  -->
+    <!--  for some reason its a duplicate attr -->
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:animateLayoutChanges="true"
+
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:openDrawer="start">
+
+        <!--  android:layout_gravity="start" so it will appear on the left for ltr languages-->
+        <com.google.android.material.navigation.NavigationView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/nav_view"
+            app:headerLayout="@layout/main_menu_header"
+            app:menu="@menu/main_menu"
+            android:layout_gravity="start"/>
+
+
+    
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/home_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.HomeActivity"
+
+
+
+    >
+    <!-- Tool Bar -->
+    <include
+        layout="@layout/tool_bar_layout"
+        android:id="@+id/tool_bar_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        />
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/search_container"
+
+        android:layout_margin="@dimen/_10sdp"
+
+        app:layout_constraintTop_toBottomOf="@id/tool_bar_layout"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        >
+        <!-- Search View -->
+        <!-- Added  android:focusableInTouchMode="false" so first touch will act as a click (no focus)-->
+    <EditText
+        android:id="@+id/search_view"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/search_hint"
+
+        android:focusableInTouchMode="true"
+
+        android:drawableStart="@drawable/baseline_search_24"
+        android:background="@drawable/rounded_edit_text"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/img_search_button"
+
+        android:padding="10dp"
+
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+
+        android:autofillHints=""
+        android:inputType="text" />
+
+        <ImageView
+            android:id="@+id/img_search_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:padding="10dp"
+
+            android:visibility="gone"
+            android:src="@drawable/baseline_search_24"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/search_view"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <FrameLayout
+        android:id="@+id/search_fragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        android:layout_margin="@dimen/_10sdp"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_container"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        >
+
+    <GridView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:id="@+id/categories_grid_view"
+
+        android:numColumns="2"
+
+        android:layout_margin="@dimen/_15sdp"
+
+        android:horizontalSpacing="@dimen/_45sdp"
+        android:verticalSpacing="@dimen/_45sdp"
+
+        />
+        <ImageView
+            android:id="@+id/test_pres"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/choose_image_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="bottom|end"
+            />
+
+
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:id="@+id/bottom_nav"
+        app:menu="@menu/bottom_nav_menu"
+
+        android:layout_gravity="bottom"
+        android:fitsSystemWindows="true"
+
+        app:itemHorizontalTranslationEnabled="false"
+
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

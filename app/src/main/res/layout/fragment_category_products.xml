@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/white">
+
+
+    <TextView
+        android:id="@+id/category_products_fragment_category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="mainCategory/subCategory"
+        android:textSize="@dimen/_15sdp"
+        android:textStyle="bold"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/category_products_fragment_recyclerview"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/category_products_fragment_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_products_fragment_category_label"
+
+        android:layout_margin="@dimen/_15sdp"
+
+        />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

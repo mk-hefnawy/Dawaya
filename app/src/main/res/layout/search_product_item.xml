@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+
+    android:layout_margin="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_50sdp"
+    android:layout_marginBottom="@dimen/_50sdp"
+
+    app:cardCornerRadius="@dimen/_15sdp"
+
+    >
+
+    <!--Main Container-->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <!-- All above btn -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:src="@mipmap/drug_img"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <!--Name , Price, Availability-->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+
+            android:layout_marginStart="@dimen/_10sdp"
+            >
+
+        <TextView
+            android:id="@+id/product_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Product Name"
+
+            android:textSize="@dimen/_18sdp"
+
+            android:gravity="center_horizontal"
+            />
+
+
+
+        <TextView
+            android:id="@+id/product_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="120.0 EGP"
+
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold"
+
+            android:gravity="center_horizontal"/>
+
+
+
+        <TextView
+            android:id="@+id/product_quantity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="Available"
+            android:textColor="@color/green"
+            android:textSize="@dimen/_12sdp"
+
+
+            android:gravity="center_horizontal"
+            />
+
+        </LinearLayout>
+
+        <!-- Fav Button Container -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.4">
+
+            <ImageView
+                android:id="@+id/fav_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@mipmap/heart"
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+        <Button
+            android:id="@+id/add_to_cart_btn"
+            android:text="@string/add_to_cart"
+
+            android:background="@drawable/rounded_button"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <!-- Quantity -->
+        <LinearLayout
+            android:id="@+id/cart_quantity_container"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:visibility="gone"
+            android:background="@drawable/border"
+
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="@dimen/_10sdp"
+            >
+
+            <ImageView
+
+                android:id="@+id/decrease_quantity"
+                android:src="@drawable/outline_remove_black_36"
+
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+
+
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_5sdp"
+
+                android:layout_margin="@dimen/_5sdp"
+                />
+
+            <TextView
+                android:id="@+id/quantity_text_view"
+
+                android:layout_weight="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="1"
+                android:textSize="@dimen/_20sdp"
+                android:textStyle="bold"
+
+                android:layout_gravity="center"
+                android:gravity="center"
+
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_5sdp"
+                />
+
+            <ImageView
+
+                android:id="@+id/increase_quantity"
+                android:src="@drawable/outline_add_black_36"
+
+                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+
+                android:paddingStart="@dimen/_5sdp"
+                android:paddingEnd="@dimen/_5sdp"
+
+                android:layout_margin="@dimen/_5sdp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

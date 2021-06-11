@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.ChosenCategoryActivity">
+    <include
+        layout="@layout/tool_bar_layout"
+        android:id="@+id/tool_bar_layout"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        />
+
+    <FrameLayout
+        android:id="@+id/category_products_fragment_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tool_bar_layout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+
+        >
+
+    <TextView
+        android:id="@+id/sub_category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textSize="@dimen/_20sdp"
+
+        android:layout_margin="@dimen/_15sdp"
+
+
+        />
+
+    <GridView
+        android:id="@+id/sub_categories_gird_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:numColumns="2"
+
+        android:layout_margin="@dimen/_15sdp"
+
+        android:horizontalSpacing="@dimen/_45sdp"
+        android:verticalSpacing="@dimen/_45sdp"
+
+        app:layout_constraintTop_toBottomOf="@id/sub_category_label"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+
+        />
+
+    </FrameLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/category_products_fragment_placeholder"
+        app:layout_constraintVertical_bias="1.0"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
