@@ -12,6 +12,7 @@ import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
@@ -62,7 +63,7 @@ public class SignUpRepo {
 
         JSONObject body = new JSONObject();
         try {
-            body.put("credit", 10.0);
+            body.put("credit", 10f);
             body.put("firstName", user.getFirstName());
             body.put("lastName", user.getLastName());
             body.put("email", user.getEmail());
@@ -102,7 +103,7 @@ public class SignUpRepo {
                         //populate the live data with current user id
                         currentUserId.setValue(customerId);
 
-                        //sendPhoneNumber(customerId, user.getPhoneNumber());
+                        sendPhoneNumber(customerId, user.getPhoneNumber());
                         Log.v("signed up successfully", "true");
                         Toast.makeText(context, "Signed up successfully", Toast.LENGTH_LONG).show();
                     }
@@ -131,18 +132,6 @@ public class SignUpRepo {
 
         })
         {
-            /*@Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                    params.put("credit", "");
-                    params.put("firstName", user.getFirstName());
-                    params.put("lastName", user.getLastName());
-                    params.put("email", user.getEmail());
-                    params.put("password", user.getPassword());
-                    params.put("gender", user.getGender());
-                    params.put("dateOfBirth", user.getDateOfBirth());
-                return params;
-            }*/
 
             @Override
             public byte[] getBody() {
@@ -154,12 +143,6 @@ public class SignUpRepo {
                 }
             }
 
-            /*@Override
-            public String getBodyContentType() {
-                //return "application/json; charset=utf-8";
-                //return "application/json; charset=latin1";
-                return "application/json";
-            }*/
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 HashMap<String, String> headers = new HashMap<String, String>();
@@ -171,7 +154,22 @@ public class SignUpRepo {
         };
 
 
-        stringRequest.setRetryPolicy(new DefaultRetryPolicy(5000, DefaultRetryPolicy.DEFAULT_MAX_RETRIES, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 30000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 30000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(stringRequest);
     }
 
@@ -257,14 +255,23 @@ public class SignUpRepo {
     }*/
 
     private void sendPhoneNumber(String customerId, String phoneNumber){
+        JSONObject body = new JSONObject();
+        JSONObject subBody = new JSONObject();
+        try {
+            subBody.put("customerId", customerId);
+            subBody.put("phoneNumber", phoneNumber);
+            body.put("id", subBody);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, URLs.postPhoneNumnerUrl, new Response.Listener<String>() {
+
+        JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.POST, URLs.postPhoneNumnerUrl,body, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(JSONObject response) {
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
                     //Success
-                    if (jsonObject.getString("status").equals("0")){
+                    if (response.getString("status").equals("0")){
                         Toast.makeText(context, "Signed up successfully",Toast.LENGTH_SHORT).show();
                     }else Toast.makeText(context, "Sign up failed", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
@@ -283,15 +290,7 @@ public class SignUpRepo {
             }
         }
         ){
-            @Nullable
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
 
-                params.put("customer_id", customerId);
-                params.put("phone_number", phoneNumber);
-                return params;
-            }
         };
 
         requestQueue.add(stringRequest);

@@ -17,7 +17,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.PhoneNumbersActivity"></activity>
+        <activity android:name=".ui.ChatBotActivity"></activity>
+        <activity android:name=".ui.WebScrapingActivity" />
+        <activity android:name=".ui.PhoneNumbersActivity" />
         <activity android:name=".ui.ShippingActivity" />
         <activity android:name=".ui.WishlistActivity" />
         <activity android:name=".ui.CartActivity" />
@@ -36,10 +38,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.HomeActivity"
-            android:theme="@style/AppTheme" />
-        <activity
-            android:name=".ui.SignInActivity"
-            android:noHistory="true">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -47,8 +46,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.SignInActivity"
+            android:noHistory="true"></activity>
+        <activity
             android:name=".ui.SignUpActivity"
             android:noHistory="true" />
+
+        <receiver android:name=".notifications.FeedBackBroadCastReceiver" />
     </application>
 
 </manifest>

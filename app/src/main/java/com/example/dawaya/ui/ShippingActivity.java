@@ -1,15 +1,21 @@
 package com.example.dawaya.ui;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,21 +25,25 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.dawaya.R;
 import com.example.dawaya.adapters.BottomSheetAdapter;
 import com.example.dawaya.adapters.ProductsAdapter;
 import com.example.dawaya.interfaces.BottomSheetInterface;
 import com.example.dawaya.models.AddressModel;
+import com.example.dawaya.models.OrderModel;
+import com.example.dawaya.models.OrdersTable;
 import com.example.dawaya.models.ProductModel;
+import com.example.dawaya.notifications.FeedBackBroadCastReceiver;
 import com.example.dawaya.utils.SharedPrefs;
+import com.example.dawaya.utils.Utils;
 import com.example.dawaya.viewmodels.AddressBookViewModel;
 import com.example.dawaya.viewmodels.ShippingViewModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ShippingActivity extends AppCompatActivity implements BottomSheetInterface {
@@ -57,15 +67,28 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
     String addressToViewModel;
     Double totalPriceToViewModel;
     ArrayList<ProductModel> shippingProducts;
+    String timeToViewModel;
+    String billId;
+    OrdersTable orderRecord;
 
+    View shippingRoot;
+
+    ImageView backButton;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shiping);
 
-        SharedPrefs.init();
-
         shippingViewModel = new ViewModelProvider(this).get(ShippingViewModel.class);
+
+        //Back
+        backButton = findViewById(R.id.back_from_shipping);
+        backButton.setOnClickListener(view -> {
+            super.onBackPressed();
+        });
+
 
         //Shipping products
 
@@ -92,22 +115,15 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
 
         //Change-button Click Listener
         addressBookViewModel = new AddressBookViewModel();
-        addressBookViewModel.sendAddressesRequest(SharedPrefs.read(SharedPrefs.USER_ID, ""));
-        addressBookViewModel.getAddressesLiveData().observeForever(new Observer<ArrayList<AddressModel>>() {
-            @Override
-            public void onChanged(ArrayList<AddressModel> addressModels) {
-                addresses = addressModels;
+        //Notice
+        /*addressBookViewModel.sendAddressesRequest(SharedPrefs.read(SharedPrefs.USER_ID, ""));
+        addressBookViewModel.getAddressesLiveData().observeForever(addressModels -> {
+            addresses = addressModels;
 
-                //Notice user cannot press change button unless the addresses have come from the server
-                change = findViewById(R.id.shipping_change_address_button);
-                change.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        showBottomSheet();
-                    }
-                });
-            }
-        });
+            //Notice user cannot press change button unless the addresses have come from the server
+            change = findViewById(R.id.shipping_change_address_button);
+            change.setOnClickListener(view -> showBottomSheet());
+        });*/
 
 
         // Total Price TextView
@@ -124,20 +140,89 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
         // Preparing Data
         addressToViewModel = chosenAddress.getText().toString();
         totalPriceToViewModel = Double.valueOf(totalPrice.getText().toString());
-        placeOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sendOrder();
-            }
+
+        placeOrder.setOnClickListener(view -> {
+            timeToViewModel = Utils.dateToString(LocalDateTime.now());
+            sendOrder(addressToViewModel, totalPriceToViewModel,timeToViewModel, shippingProducts);
+            observeBillId();
+            observeStatus();
+
         });
 
-
+        timeToViewModel = Utils.dateToString(LocalDateTime.now());
+        //sendOrder(addressToViewModel, totalPriceToViewModel,timeToViewModel, shippingProducts);
+        //observeBillId();
+        observeStatus();
 
     }
 
-    private void sendOrder() {
-
+    private void observeOrderInfo(){
+        shippingViewModel.getOrderLivaData().observe(this, orderModel -> {
+            createNotificationIntent(orderModel, 5000);
+        });
     }
+
+    private void createNotificationIntent (OrderModel orderModel, long delay) {
+
+        Intent notificationIntent = new Intent(this, FeedBackBroadCastReceiver.class);
+
+        notificationIntent.putExtra("NotificationId", "1" );
+        notificationIntent.putExtra("OrderId", orderModel.getOrderId());
+        notificationIntent.putExtra("NotificationBody", "Tell us about your experience with our ordering system");
+        notificationIntent.putExtra("NotificationTitle","It's Feedback Time!");
+        notificationIntent.putExtra("ChannelId","1");
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE) ;
+        assert alarmManager != null;
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, delay, pendingIntent) ;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void sendOrder(String address, Double totalPrice, String time, ArrayList<ProductModel> products) {
+
+        shippingViewModel.sendOrder(address, totalPrice, time, products);
+    }
+
+    private void observeBillId() {
+        shippingViewModel.getBill_id().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                billId = s;
+            }
+        });
+    }
+    private void observeStatus(){
+        //shippingViewModel.getStatusLiveData().observeForever(this::reactToStatus);
+        reactToStatus(1);
+    }
+
+    private void reactToStatus(Integer status) {
+         shippingRoot = (ConstraintLayout) findViewById(R.id.shipping_root);
+        if (status == 1){
+            Snackbar.make(shippingRoot, "Order Placed Successfully", Snackbar.LENGTH_SHORT);
+            //TODO orderState stuff
+            //it has to be ONGOING and after the interval it has to be DONE
+            //String userId = SharedPrefs.read(SharedPrefs.USER_ID, "");
+            ////
+
+            Log.v("from react to status", "rr");
+            observeOrderInfo();
+
+            ////
+            /*String userId = "4";
+            billId = "5";
+            orderRecord = new OrdersTable(billId, userId,  timeToViewModel,"2020-1-1 12:01:20" , "BABY", "FOOD");*/
+
+            //Room Stuff
+            //insertOrderIntoDataBase();
+
+            // you can now set a notification for the feedback after a period of time
+        }
+        else {
+            Snackbar.make(shippingRoot, "Something Went Wrong", Snackbar.LENGTH_SHORT);
+        }
+    }
+
 
     private void showBottomSheet() {
 

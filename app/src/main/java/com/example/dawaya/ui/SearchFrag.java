@@ -110,7 +110,7 @@ public class SearchFrag extends Fragment implements ProductsInterface {
 
         for (int i = 0; i < size; i++) {
             if (searchProducts.get(i).getCode().equals(productCode)) {
-                alreadyInCart = cartViewModel.addProductToCart(searchProducts.get(i));
+                alreadyInCart = cartViewModel.addProductToCart(getContext(), searchProducts.get(i));
                 Log.v("OK", "OK");
             }
 

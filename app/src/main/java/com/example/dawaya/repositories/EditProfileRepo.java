@@ -76,7 +76,7 @@ public class EditProfileRepo {
                 params.put("first_name", user.getFirstName());
                 params.put("last_name", user.getLastName());
                 params.put("email", user.getEmail());
-                params.put("phone_number", user.getPhoneNumber());
+                //params.put("phone_number", user.getPhoneNumber());
                 params.put("gender", user.getGender());
                 params.put("date_of_birth", user.getDateOfBirth());
                 return params;

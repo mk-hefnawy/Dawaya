@@ -3,22 +3,35 @@ package com.example.dawaya.models;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-public class OrderPeripheralsModel {
+public class OrderModel {
 
     String orderId;
     Double orderTotalPrice;
     String orderDate;
     String orderState;
     String orderAddress;
+    ArrayList<ProductModel> products;
 
+    public OrderModel() {
+    }
 
-    public OrderPeripheralsModel(String orderId, Double orderTotalPrice, String orderDate, String orderState, String orderAddress) {
+    public OrderModel(String orderId, Double orderTotalPrice, String orderDate, String orderState, String orderAddress) {
         this.orderId = orderId;
         this.orderTotalPrice = orderTotalPrice;
         this.orderDate = orderDate;
         this.orderState = orderState;
         this.orderAddress = orderAddress;
+    }
+
+    public OrderModel(String orderId, Double orderTotalPrice, String orderDate, String orderState, String orderAddress, ArrayList<ProductModel> products) {
+        this.orderId = orderId;
+        this.orderTotalPrice = orderTotalPrice;
+        this.orderDate = orderDate;
+        this.orderState = orderState;
+        this.orderAddress = orderAddress;
+        this.products = products;
     }
 
     public Double getOrderTotalPrice() {
@@ -57,5 +70,13 @@ public class OrderPeripheralsModel {
 
     public void setOrderAddress(String orderAddress) {
         this.orderAddress = orderAddress;
+    }
+
+    public ArrayList<ProductModel> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<ProductModel> products) {
+        this.products = products;
     }
 }

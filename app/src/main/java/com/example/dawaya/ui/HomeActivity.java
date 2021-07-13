@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 
 import android.Manifest;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,13 +25,13 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -38,6 +40,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.applozic.mobicomkit.api.account.register.RegistrationResponse;
 import com.example.dawaya.R;
 import com.example.dawaya.adapters.MainCategoriesAdapter;
 import com.example.dawaya.databinding.ActivityHomeBinding;
@@ -47,12 +50,20 @@ import com.example.dawaya.utils.CategoriesData;
 import com.example.dawaya.utils.SharedPrefs;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.gson.JsonArray;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+
+import io.kommunicate.BuildConfig;
+import io.kommunicate.Kommunicate;
+import io.kommunicate.callbacks.KMLoginHandler;
 
 public class HomeActivity extends AppCompatActivity implements HomeItemClickInterface {
 
@@ -82,6 +93,9 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
     ImageView prescriptionPlaceholder;
     Bitmap bitmap;
 
+    Button testNotification;
+    public static final String APP_ID = "3d8a8b7f07fa6b94e02fbefcb69918908";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,12 +106,37 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
         toolBar = findViewById(R.id.tool_bar);
         // Setting the action bar for this activity
         setSupportActionBar(toolBar);
-        //Log.v("From Home", SharedPrefs.read(SharedPrefs.EMAIL, "h5h"));
-        //Log.v("From Homeeee", SharedPrefs.read(SharedPrefs.FIRST_NAME, "h5h"));
-
-
         mainMenuDrawerLayout =  homeBinding.drawerLayout;   //  findViewById(R.id.drawer_layout);
 
+        //Json Testing
+        testJson();
+
+        //Notification Channel Creation
+        testNotification = findViewById(R.id.test_notification);
+        testNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(HomeActivity.this, ChatBotActivity.class));
+            }
+        });
+
+        /*createNotificationChannel();
+        testNotification = findViewById(R.id.test_notification);
+        testNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(HomeActivity.this, FeedBackBroadCastReceiver.class);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(HomeActivity.this, 0, intent, 0);
+
+                AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                long timeNow = System.currentTimeMillis();
+                long timeToWait = timeNow + 10000;  //after 10 seconds the alarm will go off
+
+                alarmManager.set(AlarmManager.RTC_WAKEUP, timeToWait, pendingIntent);
+
+
+            }
+        });*/
 
         // to draw the nav view when swipe
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, mainMenuDrawerLayout, toolBar,
@@ -182,6 +221,37 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
 
     }
 
+    private void testJson() {
+
+            JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject2 = new JSONObject();
+            JSONArray jsonArray = new JSONArray();
+            try {
+                jsonObject.put("name", "Panadol");
+                jsonObject.put("main_category", "main_category1");
+                jsonObject.put("secondary_category", "secondary_category1");
+                jsonObject.put("position", "position1");
+                jsonObject.put("image_url", "url1");
+                jsonObject.put("price", "price1");
+                jsonObject.put("quantity", "quantity1");
+
+                jsonObject2.put("name", "Panadol2");
+                jsonObject2.put("main_category", "main_category2");
+                jsonObject2.put("secondary_category", "secondary_category2");
+                jsonObject2.put("position", "position2");
+                jsonObject2.put("image_url", "url2");
+                jsonObject2.put("price", "price2");
+                jsonObject2.put("quantity", "quantity2");
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            jsonArray.put(jsonObject);
+            jsonArray.put(jsonObject2);
+            System.out.println(jsonArray);
+
+    }
 
 
     @Override
@@ -282,6 +352,22 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
 
         super.onActivityResult(requestCode, resultCode, data);
     }
+    private void createNotificationChannel() {
+
+        // Since notification channels were introduced in 2017 in oreo version of android
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String name = "FeedBackChannel";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            String description = "Channel For User FeedBack Notifications";
+
+            NotificationChannel feedBackChannel = new NotificationChannel("FeedBack", name, importance);
+            feedBackChannel.setDescription(description);
+
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(feedBackChannel);
+
+        }
+    }
 
     private void startPrescriptionActivity(String filename) {
         Intent intent = new Intent(this, PrescriptionActivity.class);
@@ -312,6 +398,10 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
                 switch (item.getItemId()) {
                     case R.id.log_out_button:
                         logOut();
+                        return true;
+
+                    case R.id.test_menu_item:
+                        startActivityFromHome(5);
                         return true;
 
                     case R.id.phone_numbers_menu_item:
@@ -346,6 +436,7 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
         //2 SettingsActivity
         //3 WishListActivity
         //4 PhoneNumbersActivity
+        //5 TestingActivity
         //9 SignInActivity
         Intent intent;
         if (activityFlag == 0){
@@ -368,6 +459,11 @@ public class HomeActivity extends AppCompatActivity implements HomeItemClickInte
 
         else if (activityFlag == 4){
             intent = new Intent(this, PhoneNumbersActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        else if (activityFlag == 5){
+            intent = new Intent(this, WebScrapingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK);
         }
 

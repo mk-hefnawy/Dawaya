@@ -9,21 +9,25 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dawaya.R;
+import com.example.dawaya.interfaces.PhoneNumbersInterface;
+import com.google.android.material.chip.Chip;
 
 import java.util.ArrayList;
 
 public class PhoneNumbersAdapter extends RecyclerView.Adapter<PhoneNumbersAdapter.PhNumViewHolder> {
 
     ArrayList<String> phoneNumbers;
+    PhoneNumbersInterface anInterface;
 
-    public PhoneNumbersAdapter(ArrayList<String> phoneNumbers) {
+    public PhoneNumbersAdapter(ArrayList<String> phoneNumbers,  PhoneNumbersInterface anInterface) {
         this.phoneNumbers = phoneNumbers;
+        this.anInterface = anInterface;
     }
 
     @NonNull
     @Override
     public PhNumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View listItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.phone_number_list_item, parent, false);
+        View listItem = LayoutInflater.from(parent.getContext()).inflate(R.layout.edit_phone_numbers_recycler_view_item, parent, false);
         return new PhNumViewHolder(listItem);
     }
 
@@ -39,10 +43,27 @@ public class PhoneNumbersAdapter extends RecyclerView.Adapter<PhoneNumbersAdapte
 
     public class PhNumViewHolder extends RecyclerView.ViewHolder {
         TextView phoneNumber;
+        Chip editPhoneNumber, deletePhoneNumber;
         public PhNumViewHolder(@NonNull View itemView) {
             super(itemView);
 
             phoneNumber = itemView.findViewById(R.id.phone_number);
+            editPhoneNumber = itemView.findViewById(R.id.update_phone_number);
+            deletePhoneNumber = itemView.findViewById(R.id.delete_phone_number);
+
+            editPhoneNumber.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    anInterface.onEditPhoneNumberClicked(phoneNumbers.get(getAdapterPosition()));
+                }
+            });
+
+            deletePhoneNumber.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    anInterface.onDeletePhoneNumberClicked(phoneNumbers.get(getAdapterPosition()));
+                }
+            });
 
         }
     }

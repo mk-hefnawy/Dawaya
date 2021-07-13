@@ -3,12 +3,15 @@ package com.example.dawaya.utils;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.Window;
 import android.widget.DatePicker;
+
+import androidx.annotation.RequiresApi;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -19,6 +22,8 @@ import com.google.gson.Gson;
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -70,6 +75,17 @@ public class Utils {
         DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.US);
         String strDate = dateFormat.format(date);
         return strDate;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static String dateToString (LocalDateTime dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd hh:mm:ss");
+        return dateTime.format(formatter);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public static LocalDateTime stringToDateTime(String dateTime){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return  LocalDateTime.parse(dateTime, formatter);
     }
 
     public static void createUserSession(SignUpModel user) {

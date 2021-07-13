@@ -1,6 +1,8 @@
 package com.example.dawaya.repositories;
 
 import android.content.Context;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -8,6 +10,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.dawaya.utils.App;
 import com.example.dawaya.utils.URLs;
@@ -33,6 +36,7 @@ public class PhoneNumbersRepo {
     }
 
     MutableLiveData<ArrayList<String>> fromServerPhoneNumbersLiveData = new MutableLiveData<>();
+    MutableLiveData<Integer> addPhoneNumberStatus = new MutableLiveData<>();
 
     public void getPhoneNumbers(String userId){
         String url = URLs.getPhoneNumbersUrl + "/" + userId;
@@ -73,7 +77,42 @@ public class PhoneNumbersRepo {
 
     }
 
+    public void addPhoneNumber(String customerId, String phoneNumber){
+        JSONObject body = new JSONObject();
+        JSONObject subBody = new JSONObject();
+        try {
+            subBody.put("customerId", customerId);
+            subBody.put("phoneNumber", phoneNumber);
+            body.put("id", subBody);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, URLs.postPhoneNumnerUrl,body, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                addPhoneNumberStatus.setValue(1);
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+            }
+        }
+        ){
+
+        };
+
+        requestQueue.add(jsonObjectRequest);
+    }
+
     public MutableLiveData<ArrayList<String>> getFromServerPhoneNumbersLiveData() {
         return fromServerPhoneNumbersLiveData;
+    }
+
+    public MutableLiveData<Integer> getAddPhoneNumberStatus() {
+        return addPhoneNumberStatus;
     }
 }

@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.example.dawaya.R;
 import com.example.dawaya.adapters.MyOrdersAdapter;
 import com.example.dawaya.interfaces.ItemClickInterface;
-import com.example.dawaya.models.OrderPeripheralsModel;
+import com.example.dawaya.models.OrderModel;
 import com.example.dawaya.models.TransientProductModel;
 import com.example.dawaya.utils.App;
 import com.example.dawaya.utils.SharedPrefs;
@@ -32,6 +32,7 @@ import com.example.dawaya.utils.Utils;
 import com.example.dawaya.viewmodels.MyOrdersViewModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class MyOrdersActivity extends AppCompatActivity implements ItemClickInterface {
 
@@ -45,7 +46,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
     MyOrdersViewModel viewModel;
 
-    ArrayList<OrderPeripheralsModel> peripherals;
+    ArrayList<OrderModel> peripherals;
 
     TransientProductModel transientProducts;
     TransientProductModel selectedTransientProducts;
@@ -55,12 +56,18 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
     Boolean addressesReceived = false, productsReceived = false;
     ImageView sadFeedBack, neutralFeedBack, happyFeedBack;
+    String notificationOrderId = "";
 
     @RequiresApi(api = Build.VERSION_CODES.O) // for LocalDateTime.of
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_orders);
+
+        if (getIntent().hasExtra("orderId")){
+            notificationOrderId = Objects.requireNonNull(getIntent().getExtras()).getString("orderId");
+            Toast.makeText(this, notificationOrderId, Toast.LENGTH_SHORT).show();
+        }
 
         viewModel = new ViewModelProvider(this).get(MyOrdersViewModel.class);
         viewModel.getPeripherals();
@@ -189,20 +196,67 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
     }
 
     private void observePeripheralsResponse(){
-        viewModel.getPrephiralsLiveData().observe(this, new Observer<ArrayList<OrderPeripheralsModel>>() {
+        viewModel.getPrephiralsLiveData().observe(this, new Observer<ArrayList<OrderModel>>() {
             @Override
-            public void onChanged(ArrayList<OrderPeripheralsModel> orderPrephiralsModels) {
+            public void onChanged(ArrayList<OrderModel> orderPrephiralsModels) {
 
                 peripherals = viewModel.getPrephiralsLiveData().getValue();
-                Log.v("from Activity", peripherals.get(0).getOrderTotalPrice().toString());
-                MyOrdersAdapter adapter = new MyOrdersAdapter(peripherals, myOrdersRecyclerViewInterface); // takes the interface as 'this' because the activity implements it
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                MyOrdersAdapter adapter = new MyOrdersAdapter(peripherals, myOrdersRecyclerViewInterface, notificationOrderId); // takes the interface as 'this' because the activity implements it
+                if (!notificationOrderId.equals("")){
+                    int orderToGetFeedBackPosition = getOrderToGetFeedBackPosition(peripherals);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
+                    linearLayoutManager.scrollToPosition(orderToGetFeedBackPosition);
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                }else {
+                    recyclerView.setLayoutManager(new LinearLayoutManager(context));
+                }
+
                 recyclerView.setAdapter(adapter);
             }
         });
     }
 
+    private int getOrderToGetFeedBackPosition(ArrayList<OrderModel> peripherals) {
+        int i = 0;
+        while (i< peripherals.size()-1){
+            if (peripherals.get(i).getOrderId().equals(notificationOrderId)){
+                return i+1;
+            }
+            i++;
+        }
+        return -1;
+    }
 
+    /* private void getAllOrders() {
+            LocalDataBase localDataBase = LocalDataBase.getInstance(getApplicationContext());
+            localDataBase.mainDao().getOrders()
+                    .subscribeOn(Schedulers.computation())
+                    .subscribe(new io.reactivex.rxjava3.core.Observer<List<OrdersTable>>() {
+                        @Override
+                        public void onSubscribe(@NonNull Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(@NonNull List<OrdersTable> orderModels) {
+                            for (int i = 0; i<orderModels.size() ; i++){
+                            Log.v(String.valueOf(i), orderModels.get(i).getMainCategories());
+
+                            }
+                        }
+
+                        @Override
+                        public void onError(@NonNull Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+        }
+        */
     private void observeProductsResponse(String orderId) {
         viewModel.getProductsResponseLiveData().observe(this, new Observer<TransientProductModel>() {
             @Override

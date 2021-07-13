@@ -8,7 +8,8 @@ public class ProductModel {
     Double price;
     int quantity;
     int quantityToBuy = 1;
-    //int imageResourceId;
+    String imageUrl;
+    String position;
 
 
     public ProductModel(String code, String name, Double price, int quantity) {

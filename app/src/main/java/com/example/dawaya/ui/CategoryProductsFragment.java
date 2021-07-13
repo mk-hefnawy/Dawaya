@@ -90,7 +90,7 @@ public class CategoryProductsFragment extends Fragment implements ProductsInterf
 
         for (int i = 0; i < size; i++) {
             if (products.get(i).getCode().equals(productCode)) {
-                alreadyInCart = cartViewModel.addProductToCart(products.get(i));
+                alreadyInCart = cartViewModel.addProductToCart(getContext(), products.get(i));
                 Log.v("OK", "OK");
             }
 

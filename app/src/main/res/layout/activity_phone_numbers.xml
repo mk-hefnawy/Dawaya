@@ -79,6 +79,7 @@
             />
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/add_phone_number_button"
             android:text="@string/add"
             android:textSize="@dimen/_13sdp"
 

@@ -25,6 +25,7 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField "String", "APP_ID", '"3d8a8b7f07fa6b94e02fbefcb69918908"'
     }
 
     buildTypes {
@@ -70,7 +71,7 @@ dependencies {
     //Volley
     implementation 'com.android.volley:volley:1.2.0'
     // material design (TextInputLayout)
-    implementation 'com.google.android.material:material:1.4.0-beta01'
+    implementation 'com.google.android.material:material:1.4.0'
 
 
 
@@ -81,5 +82,27 @@ dependencies {
     testImplementation("com.squareup.okhttp3:mockwebserver:4.9.0")
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+
+    //JSoup
+    implementation 'org.jsoup:jsoup:1.11.1'
+
+    //Room
+    def room_version = "2.3.0"
+
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+
+    //RxJava
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.0'
+
+    //Telling Room we are working with RxJava3
+    implementation "androidx.room:room-rxjava3:$room_version"
+
+    //kommunicate
+    dependencies {
+//...
+        implementation 'io.kommunicate.sdk:kommunicateui:2.1.5'
+    }
 
 }

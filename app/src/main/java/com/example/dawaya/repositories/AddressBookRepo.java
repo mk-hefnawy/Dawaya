@@ -1,6 +1,7 @@
 package com.example.dawaya.repositories;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -9,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -127,7 +129,7 @@ public class AddressBookRepo {
         JSONObject subBody = new JSONObject();
         JSONObject body = new JSONObject();
         try {
-            subBody.put("customerId", customerId);
+            subBody.put("customerId", Integer.valueOf(customerId));
             subBody.put("address", address);
 
             body.put("id", subBody);
@@ -138,22 +140,21 @@ public class AddressBookRepo {
         Log.v("---", body.toString());
 
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body, response -> {
 
-                try {
-                    int status = response.getInt("states");
-                    //Success
-                    if (status == 1){
-                        postStatusLiveData.setValue(1);
-                    }
-                    else {
-                        postStatusLiveData.setValue(0);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            try {
+                int status = response.getInt("states");
+                //Success
+                if (status == 1){
+                    postStatusLiveData.setValue(1);
+                    Log.v("---", "Success - Adding Address");
                 }
+                else {
+                    postStatusLiveData.setValue(0);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.v("---", "Failure - Adding Address");
             }
         }, new Response.ErrorListener() {
             @Override
@@ -162,6 +163,22 @@ public class AddressBookRepo {
             }
         });
 
+        jsonObjectRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         requestQueue.add(jsonObjectRequest);
     }
 

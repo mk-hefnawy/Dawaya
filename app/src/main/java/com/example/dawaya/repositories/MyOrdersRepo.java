@@ -14,7 +14,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.example.dawaya.models.AddressModel;
-import com.example.dawaya.models.OrderPeripheralsModel;
+import com.example.dawaya.models.OrderModel;
 import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.models.TransientProductModel;
 import com.example.dawaya.utils.App;
@@ -31,7 +31,7 @@ public class MyOrdersRepo {
 
     Context context = App.getAppContext();
     RequestQueue requestQueue = Utils.getRequestQueue(context);
-    public MutableLiveData<ArrayList<OrderPeripheralsModel>> peripheralsResponseLiveData = new MutableLiveData<>();
+    public MutableLiveData<ArrayList<OrderModel>> peripheralsResponseLiveData = new MutableLiveData<>();
     public MutableLiveData<ArrayList<AddressModel>> addressesResponseLiveData = new MutableLiveData<>();
     public MutableLiveData<TransientProductModel> productsResponseLiveData = new MutableLiveData<>();
 
@@ -51,7 +51,7 @@ public class MyOrdersRepo {
         return instance;
     }
 
-    public MutableLiveData<ArrayList<OrderPeripheralsModel>> getPeripheralsResponseLiveData() {
+    public MutableLiveData<ArrayList<OrderModel>> getPeripheralsResponseLiveData() {
         return peripheralsResponseLiveData;
     }
 
@@ -78,11 +78,11 @@ public class MyOrdersRepo {
                 try {
                     JSONArray jsonArray = new JSONArray(response);
                     JSONObject jsonObject;
-                    ArrayList<OrderPeripheralsModel> arrayList = new ArrayList<>();
+                    ArrayList<OrderModel> arrayList = new ArrayList<>();
 
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObject = jsonArray.getJSONObject(i);
-                        arrayList.add(new OrderPeripheralsModel( jsonObject.getString("order_id"), jsonObject.getDouble("total_price"),
+                        arrayList.add(new OrderModel( jsonObject.getString("order_id"), jsonObject.getDouble("total_price"),
                                 jsonObject.getString("order_time"), jsonObject.getString("order_state"),
                                 jsonObject.getString("order_address")));
 

@@ -1,6 +1,5 @@
 package com.example.dawaya.adapters;
 
-import android.text.SpannableString;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +12,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.dawaya.R;
 import com.example.dawaya.interfaces.ItemClickInterface;
-import com.example.dawaya.models.OrderPeripheralsModel;
+import com.example.dawaya.models.OrderModel;
 
 
 import java.util.ArrayList;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrdersViewHolder> {
 
-    ArrayList<OrderPeripheralsModel> peripherals = new ArrayList<>();
+    ArrayList<OrderModel> peripherals = new ArrayList<>();
     ItemClickInterface anInterface;
+    String notificationOrderId = "";
 
 
     // added another param to the constructor, the interface
-    public MyOrdersAdapter(ArrayList<OrderPeripheralsModel> peripherals , ItemClickInterface anInterface) {
+    public MyOrdersAdapter(ArrayList<OrderModel> peripherals , ItemClickInterface anInterface) {
         this.peripherals  = peripherals ;
         this.anInterface = anInterface;
+    }
+
+    public MyOrdersAdapter(ArrayList<OrderModel> peripherals, ItemClickInterface anInterface, String notificationOrderId) {
+        this.peripherals = peripherals;
+        this.anInterface = anInterface;
+        this.notificationOrderId = notificationOrderId;
     }
 
     @NonNull
@@ -39,17 +45,37 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
     @Override
     public void onBindViewHolder(@NonNull MyOrdersViewHolder holder, int position) {
 
-        //Section Time
-        holder.orderTime.setText(peripherals .get(position).getOrderDate().toString());
+        if (!notificationOrderId.equals("")){
+            if (peripherals.get(position).getOrderId().equals(notificationOrderId)){
+                holder.orderTime.setText(peripherals .get(position).getOrderDate());
+                String str;
+                str = String.valueOf(peripherals .get(position).getOrderTotalPrice()) + " EGP";
+                holder.orderTotalPrice.setText(str);
+            }
+            else {
+                holder.itemView.setVisibility(View.GONE);
 
+                // to make other list views have 0 size
+                ViewGroup.LayoutParams params = holder.itemView.getLayoutParams();
+                params.height = 0;
+                params.width = 0;
+                holder.itemView.setLayoutParams(params);
+            }
+        }
+        else {
+        //Section Time
+        holder.orderTime.setText(peripherals .get(position).getOrderDate());
 
         //Section Price
         String str;
         str = String.valueOf(peripherals .get(position).getOrderTotalPrice()) + " EGP";
         holder.orderTotalPrice.setText(str);
-    }
+    }}
     @Override
     public int getItemCount() {
+        /*if (!notificationOrderId.equals("")){
+            return 1;
+        }*/
         return peripherals.size();
     }
 

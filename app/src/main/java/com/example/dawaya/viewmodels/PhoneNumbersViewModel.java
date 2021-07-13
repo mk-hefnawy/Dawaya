@@ -11,16 +11,17 @@ import java.util.ArrayList;
 public class PhoneNumbersViewModel extends ViewModel {
 
     MutableLiveData<ArrayList<String>> fromRepoPhoneNumbersLiveDate = new MutableLiveData<>();
+    MutableLiveData<Integer> addPhoneNumberStatus = new MutableLiveData<>();
     PhoneNumbersRepo repo = PhoneNumbersRepo.getInstance();
 
 
     public void getPhoneNumbers(String userId){
         repo.getPhoneNumbers(userId);
-        observePhoneNumbersResponse();
+        observeGetPhoneNumbersResponse();
 
     }
 
-    private void observePhoneNumbersResponse() {
+    private void observeGetPhoneNumbersResponse() {
         repo.getFromServerPhoneNumbersLiveData().observeForever(new Observer<ArrayList<String>>() {
             @Override
             public void onChanged(ArrayList<String> strings) {
@@ -29,7 +30,26 @@ public class PhoneNumbersViewModel extends ViewModel {
         });
     }
 
+
+    public void addPhoneNumber(String userId, String phoneNumber){
+        repo.addPhoneNumber(userId, phoneNumber);
+        observeAddPhoneNumbersResponse();
+    }
+
+    private void observeAddPhoneNumbersResponse() {
+        repo.getAddPhoneNumberStatus().observeForever(new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                addPhoneNumberStatus.setValue(integer);
+            }
+        });
+    }
+
     public MutableLiveData<ArrayList<String>> getFromRepoPhoneNumbersLiveDate() {
         return fromRepoPhoneNumbersLiveDate;
+    }
+
+    public MutableLiveData<Integer> getAddPhoneNumberStatus() {
+        return addPhoneNumberStatus;
     }
 }

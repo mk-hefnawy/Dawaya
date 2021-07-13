@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dawaya.viewmodels.EditPhoneNumbersViewModel" />
+
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginRight="25dp">
+
+
+        <!-- Phone Number Container -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/edit_phone_number_container"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:paddingEnd="5dp"
+            app:layout_constraintBottom_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="parent"
+
+            >
+
+            <!-- Edit Phone Number Field -->
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_phone_number_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:hint="New Phone Number"
+                android:text="@={viewModel.phoneNumber}"
+                android:textSize="@dimen/_16sdp"
+
+                android:selectAllOnFocus="true"
+
+                />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="@dimen/_10sdp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/edit_phone_number_container">
+
+            <TextView
+                android:id="@+id/edit_phone_number_cancel"
+
+                android:text="@string/cancel"
+                android:textSize="@dimen/_16sdp"
+                android:fontFamily="sans-serif-medium"
+
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/edit_phone_number_ok"
+
+                android:text="@string/ok"
+                android:textSize="@dimen/_16sdp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+
+                />
+
+
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

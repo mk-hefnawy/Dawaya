@@ -6,8 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dawaya.models.AddressModel;
-import com.example.dawaya.models.OrderPeripheralsModel;
+import com.example.dawaya.models.OrderModel;
 import com.example.dawaya.models.TransientProductModel;
 import com.example.dawaya.repositories.MyOrdersRepo;
 
@@ -15,7 +14,7 @@ import java.util.ArrayList;
 
 public class MyOrdersViewModel extends ViewModel {
 
-    MutableLiveData<ArrayList<OrderPeripheralsModel>> peripheralsResponseLiveData = new MutableLiveData<>();
+    MutableLiveData<ArrayList<OrderModel>> peripheralsResponseLiveData = new MutableLiveData<>();
 
     MutableLiveData<TransientProductModel> productsResponseLiveData = new MutableLiveData<>();
     MutableLiveData<Integer> feedBackStatusLiveData = new MutableLiveData<>();
@@ -25,7 +24,7 @@ public class MyOrdersViewModel extends ViewModel {
     public MyOrdersViewModel() {
     }
 
-    public MutableLiveData<ArrayList<OrderPeripheralsModel>> getPrephiralsLiveData() {
+    public MutableLiveData<ArrayList<OrderModel>> getPrephiralsLiveData() {
         return peripheralsResponseLiveData;
     }
 
@@ -60,9 +59,9 @@ public class MyOrdersViewModel extends ViewModel {
 
     }
     private void observePeripheralsLiveData() {
-        myOrdersRepo.peripheralsResponseLiveData.observeForever(new Observer<ArrayList<OrderPeripheralsModel>>() {
+        myOrdersRepo.peripheralsResponseLiveData.observeForever(new Observer<ArrayList<OrderModel>>() {
             @Override
-            public void onChanged(ArrayList<OrderPeripheralsModel> orderPrephiralsModels) {
+            public void onChanged(ArrayList<OrderModel> orderPrephiralsModels) {
                 updatePeripheralsLiveData();
             }
         });

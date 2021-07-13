@@ -1,0 +1,16 @@
+Table: id, products code, name, quantity, price
+
+CRUD Operations on Cart Products
+	1)When add to cart button clicked:
+		insert that product in cart products table
+
+	2)When user change quatitiy
+		update quantity of that product
+
+	3)when user delete a product from cart
+		delete it from the table
+
+
+Optional:
+	Treat that db as a source of truth of cart products instead of the activity
+	itself
