@@ -16,6 +16,8 @@ import androidx.annotation.RequiresApi;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 import com.example.dawaya.R;
+import com.example.dawaya.dummy.ApiInterface;
+import com.example.dawaya.dummy.DummyModel;
 import com.example.dawaya.models.SignUpModel;
 import com.google.gson.Gson;
 
@@ -27,6 +29,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Utils {
     //for Networking
@@ -109,6 +117,14 @@ public class Utils {
 
     }
 
+    public static Retrofit getRetrofitInstance(String baseUrl){
+
+        return new Retrofit.Builder()
+                .baseUrl(baseUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+    }
+
     public static String convertImageToString(Bitmap bitmap){
 
         ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
@@ -116,6 +132,7 @@ public class Utils {
         byte[] imageBytes = bAOS.toByteArray();
 
         String encodedImage = Base64.encodeToString(imageBytes,Base64.DEFAULT);
+        System.out.println(encodedImage);
         return encodedImage;
 
     }

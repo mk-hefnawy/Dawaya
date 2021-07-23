@@ -17,11 +17,15 @@ import com.example.dawaya.R;
 import com.example.dawaya.adapters.MyOrdersAdapter;
 import com.example.dawaya.adapters.OrderDetailsAdapter;
 import com.example.dawaya.models.AddressModel;
+import com.example.dawaya.models.OrderModel;
 import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.models.TransientProductModel;
 import com.example.dawaya.utils.App;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class OrderDetailsFragment extends Fragment {
     Context context = App.getAppContext();
@@ -53,12 +57,16 @@ public class OrderDetailsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_order_details, container, false);
 
-        address = this.getArguments().getString("address");
-        Log.v("---", address);
+        String orderString = this.getArguments().getString("order");
+        OrderModel order = new Gson().fromJson(orderString, OrderModel.class);
+
+
+        products = order.getProducts();
+        address = order.getOrderAddress();
+
         for (int i=0 ; i<address.split(",").length ; i++){
             addressHolder[i] = address.split(",")[i];
         }
-
 
         addressCounty  = view.findViewById(R.id.address_county);
         addressStreet  = view.findViewById(R.id.address_street);
@@ -85,16 +93,11 @@ public class OrderDetailsFragment extends Fragment {
 
        //Recycler View Logic
         OrderDetailsAdapter adapter = new OrderDetailsAdapter(products); // takes the interface as 'this' because the activity implements it
-        Log.v("From Fragment", products.get(1).getName());
         recyclerView = view.findViewById(R.id.order_details_products_container);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         recyclerView.setAdapter(adapter);
         return view;
 
-    }
-
-    public void setProducts(ArrayList<ProductModel> products) {
-        this.products = products;
     }
 
 

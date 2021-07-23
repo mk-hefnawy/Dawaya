@@ -4,9 +4,16 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.repositories.SearchRepo;
+import com.example.dawaya.utils.URLs;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class SearchViewModel extends ViewModel {
@@ -15,6 +22,7 @@ public class SearchViewModel extends ViewModel {
     SearchRepo searchRepo = SearchRepo.getInstance();
 
     MutableLiveData<ArrayList<ProductModel>> products = new MutableLiveData<>();
+    MutableLiveData<ProductModel> productSearchedByCode = new MutableLiveData<>();
 
     /** Methods **/
     public void sendSearchRequest(String searchKey){
@@ -26,6 +34,22 @@ public class SearchViewModel extends ViewModel {
             @Override
             public void onChanged(ArrayList<ProductModel> productModels) {
                 products.setValue(productModels);
+            }
+        });
+    }
+
+
+    public void getProductByCode(String code){
+            searchRepo.searchByCode(code);
+            observeProductSearchedByCode();
+
+    }
+
+    private void observeProductSearchedByCode() {
+        searchRepo.productSearchedByCode.observeForever(new Observer<ProductModel>() {
+            @Override
+            public void onChanged(ProductModel productModel) {
+                productSearchedByCode.setValue(productModel);
             }
         });
     }

@@ -4,6 +4,8 @@ import android.util.Log;
 
 import androidx.collection.ArraySet;
 
+import com.example.dawaya.models.ProductModel;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 
 import org.json.JSONException;
@@ -32,6 +34,21 @@ public class ExampleUnitTest {
         LocalDateTime dateTime1 = LocalDateTime.parse(dateTime, formatter);
         System.out.println(dateTime1.toString().replace('T', ' '));
     }
+
+    @Test
+    public void testGson(){
+        ProductModel productModel = new ProductModel("code", "name",
+        "mainCategory", "secondaryCategory",
+                10.0, 10, "", "");
+
+
+        String productString = new Gson().toJson(productModel);
+        System.out.println(productString);
+
+        ProductModel product = new Gson().fromJson(productString, ProductModel.class);
+        System.out.println("ProductName" + " " + product.getName());
+    }
+
 
 
 

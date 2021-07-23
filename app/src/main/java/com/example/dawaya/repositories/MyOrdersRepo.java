@@ -31,11 +31,10 @@ public class MyOrdersRepo {
 
     Context context = App.getAppContext();
     RequestQueue requestQueue = Utils.getRequestQueue(context);
-    public MutableLiveData<ArrayList<OrderModel>> peripheralsResponseLiveData = new MutableLiveData<>();
+
+    public MutableLiveData<ArrayList<OrderModel>> ordersLiveData = new MutableLiveData<>();
     public MutableLiveData<ArrayList<AddressModel>> addressesResponseLiveData = new MutableLiveData<>();
     public MutableLiveData<TransientProductModel> productsResponseLiveData = new MutableLiveData<>();
-
-
     public MutableLiveData<Integer> feedBackStatusLiveData = new MutableLiveData<>();
 
     TransientProductModel transientProductModel;
@@ -51,8 +50,8 @@ public class MyOrdersRepo {
         return instance;
     }
 
-    public MutableLiveData<ArrayList<OrderModel>> getPeripheralsResponseLiveData() {
-        return peripheralsResponseLiveData;
+    public MutableLiveData<ArrayList<OrderModel>> getOrdersLiveData() {
+        return ordersLiveData;
     }
 
     public MutableLiveData<ArrayList<AddressModel>> getAddressesResponseLiveData() {
@@ -63,19 +62,66 @@ public class MyOrdersRepo {
         return productsResponseLiveData;
     }
 
-    String url = "https://b68ab667-18bb-4ab9-bfe7-97843785619b.mock.pstmn.io/peripherals";
     String getAddressesUrl = "https://b68ab667-18bb-4ab9-bfe7-97843785619b.mock.pstmn.io/addresses";
     String getProductsUrl = "https://b68ab667-18bb-4ab9-bfe7-97843785619b.mock.pstmn.io/getOrderProducts";
 
     /** Sending the Request**/
 
-    public void sendPeripheralsRequest() {
+    public void getAllUserOrders(String userId) {
+        String url = URLs.getOrdersUrl + "/" + "26";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @RequiresApi(api = Build.VERSION_CODES.O) // for now()
             @Override
             public void onResponse(String response) {
-
                 try {
+                    JSONObject theResponse = new JSONObject(response);
+                    JSONArray jsonOrdersArray = theResponse.getJSONArray("the_customer_bills");
+                    JSONObject jsonOrder;
+
+                    JSONArray jsonBillProducts;
+
+                    ArrayList<OrderModel> orders =  new ArrayList<>();
+
+
+                    for (int i = 0 ; i<jsonOrdersArray.length() ; i++) {
+                        jsonOrder = jsonOrdersArray.getJSONObject(i);
+
+                        //theBill = jsonOrder.getJSONObject("theBill");
+
+                        // getting orders without products
+                        orders.add(new OrderModel(jsonOrder.getString("billId"), jsonOrder.getDouble("totalPrice"),
+                                jsonOrder.getString("time"), jsonOrder.getString("billState"),
+                                jsonOrder.getString("customerAddress")));
+
+
+                        jsonBillProducts = jsonOrder.getJSONArray("billsProducts");
+                        JSONObject jsonProduct, id;
+                        ArrayList<ProductModel> products = new ArrayList<>();
+
+                        for (int j = 0; j < jsonBillProducts.length(); j++) {
+
+                            jsonProduct = jsonBillProducts.getJSONObject(j);
+                            id = jsonProduct.getJSONObject("id");
+
+                            products.add(new ProductModel(id.getString("productCode"), jsonProduct.getDouble("unitPrice"),
+                                    jsonProduct.getDouble("totalPrice"), jsonProduct.getInt("quantity"), id.getString("companyId"),
+                                    id.getString("supplyId")));
+
+                        }
+
+                        orders.get(i).setProducts(products);
+                    }
+
+                    ordersLiveData.setValue(orders);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
+            }
+
+               /* try {
                     JSONArray jsonArray = new JSONArray(response);
                     JSONObject jsonObject;
                     ArrayList<OrderModel> arrayList = new ArrayList<>();
@@ -92,10 +138,10 @@ public class MyOrdersRepo {
                     Log.v("----", peripheralsResponseLiveData.getValue().get(0).getOrderTotalPrice().toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
-                }
+                }*/
 
 
-            }
+
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -106,39 +152,7 @@ public class MyOrdersRepo {
         requestQueue.add(stringRequest);
     }
 
-   /* public void sendAddressesRequest(){
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, getAddressesUrl, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONArray jsonArray = new JSONArray(response);
-                    JSONObject jsonObject;
-                    ArrayList<AddressModel> arrayList = new ArrayList<>();
-                    for (int i =0; i<jsonArray.length(); i++){
-                        jsonObject = jsonArray.getJSONObject(i);
-                        arrayList.add(new AddressModel(jsonObject.getInt("order_id"), jsonObject.getString("county"),
-                                jsonObject.getString("street"), jsonObject.getString("building_no"), jsonObject.getString("floor_no"),
-                                jsonObject.getString("apartment_no")));
-                    }
-                    addressesResponseLiveData.setValue(arrayList);
-                    Log.v("Hello", addressesResponseLiveData.getValue().get(1).getStreet());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-                error.printStackTrace();
-            }
-        });
-        requestQueue.add(stringRequest);
-    }
-*/
-    public void sendProductsRequest(String orderId){
+  /*  public void getOrderProducts(OrderModel order){
 
         String url = getProductsUrl + "?orderId=" + orderId;
 
@@ -156,8 +170,9 @@ public class MyOrdersRepo {
 
                     for (int i = 0; i<jsonArray.length(); i++){
                         productJsonObject = jsonArray.getJSONObject(i);
-                        products.add(new ProductModel(productJsonObject.getString("code"),productJsonObject.getString("name"),
-                                    productJsonObject.getDouble("price"),productJsonObject.getInt("quantity")));
+                        *//*products.add(new ProductModel(productJsonObject.getString("code"),productJsonObject.getString("name"),"",
+                                    "", productJsonObject.getDouble("price"),productJsonObject.getInt("quantity"), "",
+                                ""));*//*
                         }
                     transientProductModel = new TransientProductModel(products, orderId);
 
@@ -176,7 +191,7 @@ public class MyOrdersRepo {
             }
         });
         requestQueue.add(stringRequest);
-    }
+    }*/
 
     public void sendUserFeedBack(String userId, String orderId, String feedBack) {
         String url = URLs.postFeedBackUrl;
@@ -188,29 +203,55 @@ public class MyOrdersRepo {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                //Status Stuff
-                try {
-                    if (response.getInt("status") == 1){
-                        feedBackStatusLiveData.setValue(1);
-                    }
-                    else {
-                        feedBackStatusLiveData.setValue(0);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body,
+                response -> {
+            //Status Stuff
+            try {
+                if (response.getInt("status") == 1){
+                    feedBackStatusLiveData.setValue(1);
                 }
-
+                else {
+                    feedBackStatusLiveData.setValue(0);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-            }
+        }, error -> {
+                error.printStackTrace();
         });
+        requestQueue.add(jsonObjectRequest);
+    }
+
+    public void sendUserMessageFeedback(String userId, String orderId, String feedBack) {
+        String url = URLs.postMessageFeedBackUrl;
+        JSONObject body = new JSONObject();
+        try {
+            body.put("customerId", userId);
+            body.put("billId", orderId);
+            body.put("userFeedBackMessage", feedBack);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body,
+                response -> {
+                    try {
+                        if (response.getInt("status") == 1){
+                            feedBackStatusLiveData.setValue(1);
+                        }
+                        else {
+                            feedBackStatusLiveData.setValue(0);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+
+                error -> {
+            error.printStackTrace();
+                });
+
         requestQueue.add(jsonObjectRequest);
     }
 }

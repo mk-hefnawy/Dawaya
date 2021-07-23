@@ -24,6 +24,7 @@ import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.utils.App;
 import com.example.dawaya.viewmodels.CartViewModel;
 import com.example.dawaya.viewmodels.SearchViewModel;
+import com.example.dawaya.viewmodels.WishListViewModel;
 
 import java.util.ArrayList;
 
@@ -33,8 +34,10 @@ public class SearchFrag extends Fragment implements ProductsInterface {
 
     String searchKey;
     EditText searchBar;
+
     SearchViewModel searchViewModel;
     CartViewModel cartViewModel = CartViewModel.getInstance();
+    WishListViewModel wishListViewModel;
 
     ArrayList<ProductModel> searchProducts = new ArrayList<>();
 
@@ -51,6 +54,7 @@ public class SearchFrag extends Fragment implements ProductsInterface {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        wishListViewModel = new ViewModelProvider(this).get(WishListViewModel.class);
         fragmentManager = getParentFragmentManager();
 
 
@@ -66,7 +70,9 @@ public class SearchFrag extends Fragment implements ProductsInterface {
         View fragmentLayoutRoot = inflater.inflate(R.layout.fragment_search, container, false);
 
 
-        searchBar.setOnFocusChangeListener(null);
+
+        /*searchBar = fragmentLayoutRoot.findViewById(R.id.search_view);
+        searchBar.setOnFocusChangeListener(null);*/
         observeViewModelLiveData(fragmentLayoutRoot);
         return fragmentLayoutRoot;
     }
@@ -76,7 +82,7 @@ public class SearchFrag extends Fragment implements ProductsInterface {
             @Override
             public void onChanged(ArrayList<ProductModel> productModels) {
                 searchProducts = productModels;
-                inflateRecyclerView(root, productModels);
+                inflateRecyclerView(root, searchProducts);
             }
         });
     }
@@ -84,7 +90,7 @@ public class SearchFrag extends Fragment implements ProductsInterface {
     private void inflateRecyclerView(View root, ArrayList<ProductModel> products) {
         RecyclerView recyclerView = root.findViewById(R.id.search_items);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        ProductsAdapter adapter = new ProductsAdapter(products, this);
+        ProductsAdapter adapter = new ProductsAdapter(products, SearchFrag.this);
         recyclerView.setAdapter(adapter);
     }
 
@@ -94,28 +100,44 @@ public class SearchFrag extends Fragment implements ProductsInterface {
         searchViewModel.sendSearchRequest(searchKey);
 
     }
+
+    //TODO mlhash lazma
     public void setSearchBar(EditText searchBar) {
         this.searchBar = searchBar;
     }
 
+
     @Override
-    public void onAddToCartClicked(String productCode) {
+    public void onAddToCartClicked(ProductModel product) {
         Boolean alreadyInCart = false;
 
         //NOTICE a bug when an item at the end is clicked
 
         //viewModel = new ViewModelProvider(this).get(CategoryProductsViewModel.class);
 
-        int size = searchProducts.size();
+        ArrayList<ProductModel> productToCart = new ArrayList<>();
+        productToCart.add(product);
+        alreadyInCart = cartViewModel.addToCart(productToCart, "append");
+
+        /*int size = searchProducts.size();
 
         for (int i = 0; i < size; i++) {
             if (searchProducts.get(i).getCode().equals(productCode)) {
-                alreadyInCart = cartViewModel.addProductToCart(getContext(), searchProducts.get(i));
+                ArrayList<ProductModel> productToCart = new ArrayList<>();
+                productToCart.add(searchProducts.get(i));
+                alreadyInCart = cartViewModel.addToCart(productToCart, "append");
                 Log.v("OK", "OK");
             }
 
         }
         if (alreadyInCart)
-            Toast.makeText(context, "Already in Cart", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Already in Cart", Toast.LENGTH_SHORT).show();*/
+    }
+
+    @Override
+    public void onFavouriteClicked(ProductModel product) {
+        ArrayList<ProductModel> productModel = new ArrayList<>();
+        productModel.add(product);
+        wishListViewModel.addToWishList(productModel, "append");
     }
 }

@@ -34,10 +34,12 @@ import com.example.dawaya.models.AddressModel;
 import com.example.dawaya.models.OrderModel;
 import com.example.dawaya.models.OrdersTable;
 import com.example.dawaya.models.ProductModel;
+import com.example.dawaya.notifications.AnotherOrderBroadCastReceiver;
 import com.example.dawaya.notifications.FeedBackBroadCastReceiver;
 import com.example.dawaya.utils.SharedPrefs;
 import com.example.dawaya.utils.Utils;
 import com.example.dawaya.viewmodels.AddressBookViewModel;
+import com.example.dawaya.viewmodels.CategoryProductsViewModel;
 import com.example.dawaya.viewmodels.ShippingViewModel;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -45,6 +47,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class ShippingActivity extends AppCompatActivity implements BottomSheetInterface {
 
@@ -61,6 +64,7 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
 
     AddressBookViewModel addressBookViewModel;
     ShippingViewModel shippingViewModel;
+    CategoryProductsViewModel categoryProductsViewModel;
 
     //Stuff to be sent to ViewModel
 
@@ -82,6 +86,7 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
         setContentView(R.layout.activity_shiping);
 
         shippingViewModel = new ViewModelProvider(this).get(ShippingViewModel.class);
+        categoryProductsViewModel = new ViewModelProvider(this).get(CategoryProductsViewModel.class);
 
         //Back
         backButton = findViewById(R.id.back_from_shipping);
@@ -152,17 +157,62 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
         timeToViewModel = Utils.dateToString(LocalDateTime.now());
         //sendOrder(addressToViewModel, totalPriceToViewModel,timeToViewModel, shippingProducts);
         //observeBillId();
-        observeStatus();
+        //observeStatus();
 
     }
 
     private void observeOrderInfo(){
         shippingViewModel.getOrderLivaData().observe(this, orderModel -> {
-            createNotificationIntent(orderModel, 5000);
+            createFeedBackNotificationIntent(orderModel, 5000);
+
+            // make the active order view with the randomly generated period
+
+            //
+            Random randomGenerator = new Random();
+            int randomInt = randomGenerator.nextInt(orderModel.getProducts().size());
+            String code = orderModel.getProducts().get(randomInt).getCode();
+            categoryProductsViewModel.getCategoryProducts(orderModel.getProducts().get(randomInt).getFirstCategory(),
+                                                          orderModel.getProducts().get(randomInt).getSecondCategory());
+
+            categoryProductsViewModel.getProducts().observe(this, new Observer<ArrayList<ProductModel>>() {
+                @Override
+                public void onChanged(ArrayList<ProductModel> productModels) {
+                    //get only one product (not the one in orderModel)
+                    ProductModel anotherOrderProduct = null;
+                    for (int i = 0 ; i<productModels.size(); i++){
+                        if (!productModels.get(i).getCode().equals(code)){
+                            anotherOrderProduct = productModels.get(i);
+                            break;
+                        }
+                    }
+                        if (anotherOrderProduct != null) {
+                            createAnotherOrderNotificationIntent(anotherOrderProduct, 5000, 10000);
+                        }
+                }
+            });
+
         });
     }
 
-    private void createNotificationIntent (OrderModel orderModel, long delay) {
+    private void createAnotherOrderNotificationIntent(ProductModel product, long delay, long repeatingInterval) {
+        Intent notificationIntent = new Intent(this, AnotherOrderBroadCastReceiver.class);
+
+        notificationIntent.putExtra("NotificationId", "2" );
+        notificationIntent.putExtra("NotificationBody", "Now you can buy " + product.getName() + " at price of ONLY " + product.getPrice());
+        notificationIntent.putExtra("NotificationTitle","A Great Opportunity is Waiting for You!");
+        notificationIntent.putExtra("ChannelId","1");
+
+        //Convert product to string using Gson()
+        String productString = new Gson().toJson(product);
+        notificationIntent.putExtra("Product", productString);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE) ;
+        assert alarmManager != null;
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, delay, repeatingInterval, pendingIntent);
+    }
+
+    private void createFeedBackNotificationIntent (OrderModel orderModel, long delay) {
 
         Intent notificationIntent = new Intent(this, FeedBackBroadCastReceiver.class);
 
@@ -175,7 +225,7 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 , notificationIntent , PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE) ;
         assert alarmManager != null;
-        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, delay, pendingIntent) ;
+        alarmManager.set(AlarmManager.RTC_WAKEUP, delay, pendingIntent) ;
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void sendOrder(String address, Double totalPrice, String time, ArrayList<ProductModel> products) {
@@ -192,34 +242,27 @@ public class ShippingActivity extends AppCompatActivity implements BottomSheetIn
         });
     }
     private void observeStatus(){
-        //shippingViewModel.getStatusLiveData().observeForever(this::reactToStatus);
-        reactToStatus(1);
+        shippingViewModel.getStatusLiveData().observeForever(new Observer<Integer>() {
+            @Override
+            public void onChanged(Integer integer) {
+                reactToStatus(integer);
+            }
+        });
+
     }
 
     private void reactToStatus(Integer status) {
          shippingRoot = (ConstraintLayout) findViewById(R.id.shipping_root);
         if (status == 1){
-            Snackbar.make(shippingRoot, "Order Placed Successfully", Snackbar.LENGTH_SHORT);
+            Snackbar.make(shippingRoot, "Order Placed Successfully", Snackbar.LENGTH_SHORT).show();
             //TODO orderState stuff
             //it has to be ONGOING and after the interval it has to be DONE
             //String userId = SharedPrefs.read(SharedPrefs.USER_ID, "");
-            ////
-
-            Log.v("from react to status", "rr");
             observeOrderInfo();
 
-            ////
-            /*String userId = "4";
-            billId = "5";
-            orderRecord = new OrdersTable(billId, userId,  timeToViewModel,"2020-1-1 12:01:20" , "BABY", "FOOD");*/
-
-            //Room Stuff
-            //insertOrderIntoDataBase();
-
-            // you can now set a notification for the feedback after a period of time
         }
         else {
-            Snackbar.make(shippingRoot, "Something Went Wrong", Snackbar.LENGTH_SHORT);
+            Snackbar.make(shippingRoot, "Something Went Wrong", Snackbar.LENGTH_SHORT).show();
         }
     }
 

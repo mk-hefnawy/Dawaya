@@ -6,11 +6,11 @@ import android.os.Bundle;
 
 import com.example.dawaya.R;
 
-public class WishlistActivity extends AppCompatActivity {
+public class RemindersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_wishlist);
+        setContentView(R.layout.activity_reminders);
     }
 }

@@ -53,7 +53,7 @@ public class OrderDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ((OrderDetailsItemViewHolder) holder).productName.setText(products.get(position-1).getName());
             ((OrderDetailsItemViewHolder) holder).productPrice.setText(String.valueOf(products.get(position-1).getPrice()));
-            ((OrderDetailsItemViewHolder) holder).productQuantity.setText(String.valueOf(products.get(position-1).getQuantity()));
+            ((OrderDetailsItemViewHolder) holder).productQuantity.setText(String.valueOf(products.get(position-1).getQuantityToBuy()));
 
 
 

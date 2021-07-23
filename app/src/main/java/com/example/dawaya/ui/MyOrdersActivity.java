@@ -11,12 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,11 +26,14 @@ import com.example.dawaya.R;
 import com.example.dawaya.adapters.MyOrdersAdapter;
 import com.example.dawaya.interfaces.ItemClickInterface;
 import com.example.dawaya.models.OrderModel;
+import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.models.TransientProductModel;
 import com.example.dawaya.utils.App;
 import com.example.dawaya.utils.SharedPrefs;
 import com.example.dawaya.utils.Utils;
 import com.example.dawaya.viewmodels.MyOrdersViewModel;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -46,9 +50,9 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
     MyOrdersViewModel viewModel;
 
-    ArrayList<OrderModel> peripherals;
+    ArrayList<OrderModel> orders;
 
-    TransientProductModel transientProducts;
+    //TransientProductModel transientProducts;
     TransientProductModel selectedTransientProducts;
 
     OrderDetailsFragment orderDetailsFragment;
@@ -56,6 +60,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
     Boolean addressesReceived = false, productsReceived = false;
     ImageView sadFeedBack, neutralFeedBack, happyFeedBack;
+    EditText feedbackMessageET;
     String notificationOrderId = "";
 
     @RequiresApi(api = Build.VERSION_CODES.O) // for LocalDateTime.of
@@ -70,7 +75,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
         }
 
         viewModel = new ViewModelProvider(this).get(MyOrdersViewModel.class);
-        viewModel.getPeripherals();
+        viewModel.getAllUserOrders(SharedPrefs.USER_ID);
 
         orderDetailsFragment = new OrderDetailsFragment();
 
@@ -87,19 +92,19 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
         /** Recycler View **/
         recyclerView =  findViewById(R.id.orders_recycler_view);
-        peripherals = new ArrayList<>();
+        orders = new ArrayList<>();
 
-        observePeripheralsResponse();
+        observeOrdersLiveData();
 
     }
 
     @Override // For Recycler View Item Click Handling
-    public void onItemClick(String orderId) {
+    public void onItemClick(OrderModel order, String code, int index) {
         //viewModel.getAddresses();
-        viewModel.getProducts(orderId);
+        viewModel.getOrderProducts(order, code, index);
 
       //  observeAddressesResponse();
-        observeProductsResponse(orderId);
+        observeProductsResponse(order);
          // i called this after products observation as the latter (address) has the logic of starting the fragment
 
         }
@@ -107,6 +112,50 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
     @Override
     public void onReOrderClicked(String orderId) {
 
+    }
+
+
+    @Override
+    public void onFeedbackClicked(String orderId) {
+        //open a dialog with a large edit text to take the feedback
+        Dialog feedBackDialog = Utils.getBasicDialog(this, R.layout.dialog_message_feedback);
+        feedBackDialog.getWindow().setLayout(700, ViewGroup.LayoutParams.WRAP_CONTENT);
+        feedBackDialog.getWindow().setBackgroundDrawable(ContextCompat.getDrawable(this, R.drawable.rounded_corners));
+        feedBackDialog.getWindow().setGravity(Gravity.CENTER);
+        feedBackDialog.show();
+
+        handleOkOrCancel(feedBackDialog, orderId);
+
+        //when user clicks ok, i will send what is in the edit text
+    }
+
+    private void handleOkOrCancel(Dialog feedBackDialog, String orderId) {
+        TextView okBtn = feedBackDialog.findViewById(R.id.message_feedback_ok);
+        TextView cancelBtn = feedBackDialog.findViewById(R.id.message_feedback_cancel);
+
+        cancelBtn.setOnClickListener(view -> {feedBackDialog.dismiss();});
+
+        okBtn.setOnClickListener(view -> {
+
+            feedbackMessageET = ((TextInputLayout)feedBackDialog.findViewById(R.id.feedback_message_container)).getEditText();
+
+            //check if the feedback message is not empty
+            if (feedbackMessageET.getText() != null && !feedbackMessageET.getText().equals("")){
+                System.out.println("HELLO");
+                viewModel.sendUserFeedBackMessage(SharedPrefs.read(SharedPrefs.USER_ID, ""), orderId, feedbackMessageET.getText().toString());
+                viewModel.getFeedBackStatusLiveData().observe(this, integer -> {
+                    if (integer == 1) {
+                        Toast.makeText(this, "Feedback was Sent Successfully", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(this, HomeActivity.class));
+                    }
+                    else {
+                        Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
+                    }
+
+                    feedBackDialog.dismiss();
+                });
+            }
+        });
     }
 
     @Override
@@ -125,6 +174,7 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
 
 
     }
+
 
     private void onRateChosen(String orderId, Dialog ratingOrderDialog) {
         sadFeedBack = ratingOrderDialog.findViewById(R.id.sad_feedback);
@@ -175,13 +225,13 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
     }
 
 
-    private void startOrderDetailsFragment(String orderId, TransientProductModel transientProductModel){
+    /*private void startOrderDetailsFragment(String orderId, TransientProductModel transientProductModel){
         String address = "";
         Bundle bundle = new Bundle();
 
-        for (int i=0 ; i<peripherals.size() ; i++){
-            if (peripherals.get(i).getOrderId().equals(orderId)){
-                address = peripherals.get(i).getOrderAddress();
+        for (int i = 0; i< orders.size() ; i++){
+            if (orders.get(i).getOrderId().equals(orderId)){
+                address = orders.get(i).getOrderAddress();
             }
         }
 
@@ -193,17 +243,31 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
         fragmentTransaction.replace(R.id.order_details_fragment_placeholder, orderDetailsFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }*/
+
+    private void startOrderDetailsFragment(OrderModel order){
+
+        Bundle bundle = new Bundle();
+        String orderString = new Gson().toJson(order);
+        bundle.putString("order", orderString);
+
+        orderDetailsFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.order_details_fragment_placeholder, orderDetailsFragment);
+        fragmentTransaction.addToBackStack("OrderDetailsFragment");
+        fragmentTransaction.commit();
     }
 
-    private void observePeripheralsResponse(){
-        viewModel.getPrephiralsLiveData().observe(this, new Observer<ArrayList<OrderModel>>() {
+    private void observeOrdersLiveData(){
+        viewModel.getOrdersLiveData().observe(this, new Observer<ArrayList<OrderModel>>() {
             @Override
-            public void onChanged(ArrayList<OrderModel> orderPrephiralsModels) {
+            public void onChanged(ArrayList<OrderModel> orderModels) {
 
-                peripherals = viewModel.getPrephiralsLiveData().getValue();
-                MyOrdersAdapter adapter = new MyOrdersAdapter(peripherals, myOrdersRecyclerViewInterface, notificationOrderId); // takes the interface as 'this' because the activity implements it
+                orders = orderModels;
+                MyOrdersAdapter adapter = new MyOrdersAdapter(orders, myOrdersRecyclerViewInterface, notificationOrderId); // takes the interface as 'this' because the activity implements it
                 if (!notificationOrderId.equals("")){
-                    int orderToGetFeedBackPosition = getOrderToGetFeedBackPosition(peripherals);
+                    int orderToGetFeedBackPosition = getOrderToGetFeedBackPosition(orders);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(context);
                     linearLayoutManager.scrollToPosition(orderToGetFeedBackPosition);
                     recyclerView.setLayoutManager(linearLayoutManager);
@@ -257,14 +321,28 @@ public class MyOrdersActivity extends AppCompatActivity implements ItemClickInte
                     });
         }
         */
-    private void observeProductsResponse(String orderId) {
-        viewModel.getProductsResponseLiveData().observe(this, new Observer<TransientProductModel>() {
+    private void observeProductsResponse(OrderModel order) {
+        viewModel.getProductsLiveData().observe(this, new Observer<ArrayList<ProductModel>>() {
             @Override
-            public void onChanged(TransientProductModel transientProductModels) {
-                transientProducts = new TransientProductModel(viewModel.getProductsResponseLiveData().getValue().getProducts(),
-                        viewModel.getProductsResponseLiveData().getValue().getOrderId());
-                productsReceived = true;
-                startOrderDetailsFragment(orderId, transientProducts);
+            public void onChanged(ArrayList<ProductModel> products) {
+
+
+                for (int i = 0; i<products.size() && i<order.getProducts().size() ; i++){
+
+                    for (int j = i+1 ; j<products.size() && j<order.getProducts().size() ; j++){
+
+                        if (order.getProducts().get(i).getCode().equals(products.get(j).getCode())){
+
+                            order.getProducts().get(i).setName(products.get(j).getName());
+                            order.getProducts().get(i).setFirstCategory(products.get(j).getFirstCategory());
+                            order.getProducts().get(i).setSecondCategory(products.get(j).getSecondCategory());
+                            order.getProducts().get(i).setPosition(products.get(j).getPosition());
+
+                        }
+                    }
+                }
+                //productsReceived = true;
+                startOrderDetailsFragment(order);
             }
         });
     }

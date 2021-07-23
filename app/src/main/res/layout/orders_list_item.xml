@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+
+    android:layout_margin="@dimen/_5sdp"
+    android:layout_marginTop="@dimen/_20sdp"
+    android:layout_marginBottom="@dimen/_20sdp"
+
+    app:cardCornerRadius="@dimen/_15sdp">
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -73,7 +87,7 @@
         />
 </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -96,8 +110,28 @@
             android:layout_alignParentTop="true"
             android:paddingStart="@dimen/_10sdp"
             android:paddingEnd="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_8sdp"
             />
+
+
+        <TextView
+            android:id="@+id/order_feedback"
+
+            android:text="@string/feedback"
+            android:textSize="@dimen/_15sdp"
+            android:textStyle="bold"
+
+            app:drawableEndCompat="@drawable/outline_chat_24"
+            android:drawablePadding="@dimen/_8sdp"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp"
+            />
+
 
         <TextView
             android:id="@+id/order_rate"
@@ -107,7 +141,7 @@
             android:textStyle="bold"
 
             app:drawableEndCompat="@drawable/outline_sentiment_satisfied_alt_24"
-            android:drawablePadding="@dimen/_10sdp"
+            android:drawablePadding="@dimen/_8sdp"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,10 +149,11 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
 
-            android:paddingStart="@dimen/_10sdp"
-            android:paddingEnd="@dimen/_10sdp"
-            android:paddingBottom="@dimen/_10sdp"
+            android:paddingStart="@dimen/_8sdp"
+            android:paddingEnd="@dimen/_8sdp"
+            android:paddingBottom="@dimen/_8sdp"
             />
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
+</androidx.cardview.widget.CardView>

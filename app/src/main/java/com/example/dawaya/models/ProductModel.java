@@ -1,32 +1,67 @@
 package com.example.dawaya.models;
 
+
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+
 public class ProductModel {
-    String code;
-    String name;
-    String firstCategory;
-    String secondCategory;
-    Double price;
-    int quantity;
-    int quantityToBuy = 1;
-    String imageUrl;
-    String position;
 
+    public String code;
+    public String companyId;
+    public String supplyId;
+    public String name;
+    public String firstCategory;
+    public String secondCategory;
+    public Double price;
+    public Double totalPrice;
+    public int quantity;
+    public int quantityToBuy = 1;
+    public String imageUrl;
+    public String position;
 
-    public ProductModel(String code, String name, Double price, int quantity) {
+    Boolean checkedInPrescriptionProducts = true;
+    String isTakenInPrescription;
+    String isAlternativeInPrescription;
+
+    public ProductModel(String code, String isTakenInPrescription, String isAlternativeInPrescription) {
         this.code = code;
-        this.name = name;
-        this.price = price;
-        this.quantity = quantity;
+        this.isTakenInPrescription = isTakenInPrescription;
+        this.isAlternativeInPrescription = isAlternativeInPrescription;
     }
 
-    public ProductModel(String code, String name, String firstCategory, String secondCategory, Double price, int quantity) {
+    public ProductModel(String code, Double price, Double totalPrice, int quantityToBuy, String companyId, String supplyId ) {
+        this.code = code;
+        this.price = price;
+        this.totalPrice = totalPrice;
+        this.quantityToBuy = quantityToBuy;
+        this.companyId = companyId;
+        this.supplyId = supplyId;
+    }
+
+    public ProductModel() {
+    }
+
+    public ProductModel(String code, String name, String firstCategory, String secondCategory, String position, String imageUrl) {
+        this.code = code;
+        this.name = name;
+        this.firstCategory = firstCategory;
+        this.secondCategory = secondCategory;
+        this.position = position;
+        this.imageUrl = imageUrl;
+    }
+
+   /* public ProductModel(String code, String name, String firstCategory, String secondCategory, Double price, int quantity, String position,
+                        String imageUrl) {
         this.code = code;
         this.name = name;
         this.firstCategory = firstCategory;
         this.secondCategory = secondCategory;
         this.price = price;
         this.quantity = quantity;
-    }
+        this.position = position;
+        this.imageUrl = imageUrl;
+    }*/
 
     public String getCode() {
         return code;
@@ -76,5 +111,69 @@ public class ProductModel {
 
     public void setQuantityToBuy(int quantityToBuy) {
         this.quantityToBuy = quantityToBuy;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getCheckedInPrescriptionProducts() {
+        return checkedInPrescriptionProducts;
+    }
+
+    public void setCheckedInPrescriptionProducts(Boolean checkedInPrescriptionProducts) {
+        this.checkedInPrescriptionProducts = checkedInPrescriptionProducts;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
+    public String getSupplyId() {
+        return supplyId;
+    }
+
+    public void setSupplyId(String supplyId) {
+        this.supplyId = supplyId;
+    }
+
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(Double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public String getIsTakenInPrescription() {
+        return isTakenInPrescription;
+    }
+
+    public void setIsTakenInPrescription(String isTakenInPrescription) {
+        this.isTakenInPrescription = isTakenInPrescription;
+    }
+
+    public String getIsAlternativeInPrescription() {
+        return isAlternativeInPrescription;
+    }
+
+    public void setIsAlternativeInPrescription(String isAlternativeInPrescription) {
+        this.isAlternativeInPrescription = isAlternativeInPrescription;
     }
 }

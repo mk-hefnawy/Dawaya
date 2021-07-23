@@ -1,41 +1,25 @@
 package com.example.dawaya.viewmodels;
 
-import android.app.Application;
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
-import com.example.dawaya.Local.LocalDataBase;
-import com.example.dawaya.models.CartProductsTable;
 import com.example.dawaya.models.ProductModel;
-import com.example.dawaya.repositories.CartRepo;
-import com.example.dawaya.repositories.MyOrdersRepo;
-import com.example.dawaya.utils.App;
-import com.google.android.material.snackbar.Snackbar;
 
-import java.time.LocalDateTime;
+import com.example.dawaya.utils.SharedPrefs;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Observable;
-
-import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.CompletableObserver;
-import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class CartViewModel extends ViewModel {
 
-    CartRepo repo = CartRepo.getInstance();
+
     ArrayList<ProductModel> initial = new ArrayList<>();
     MutableLiveData<ArrayList<ProductModel>> cartProducts = new MutableLiveData<>();
 
-
-    /** Singleton **/
     private static CartViewModel instance = null;
     public static CartViewModel getInstance(){
         if(instance == null){
@@ -48,16 +32,11 @@ public class CartViewModel extends ViewModel {
 
     }
 
-    public MutableLiveData<ArrayList<ProductModel>> getCartProducts() {
-        return cartProducts;
-    }
-
-    public Boolean addProductToCart(Context context, ProductModel product) {
+    public Boolean addToCart(ArrayList<ProductModel> products, String appendOrOverWrite) {
 
         ArrayList<ProductModel> accumulator = new ArrayList<>();
-
-        repo.insertOrderIntoDataBase(new CartProductsTable(product.getCode(), product.getName(), product.getPrice(), product.getQuantity()));
-        if (!cartProducts.getValue().isEmpty()) {
+       // repo.insertCartProductIntoDataBase(product);
+        /*if (!cartProducts.getValue().isEmpty()) {
             Log.v("CartViewModel", "array is not empty" );
             if (cartProducts.getValue().contains(product)) {
                 Log.v("CartViewModel", "repeated" );
@@ -69,14 +48,12 @@ public class CartViewModel extends ViewModel {
                 accumulator.add(product);
                 cartProducts.setValue(accumulator);
 
-
-
                 Log.v("CartViewModel", cartProducts.getValue().get(0).getName());
                 Log.v("CartViewModel", String.valueOf(cartProducts.getValue().size()));
                 return false;
             }
-
-        } else {
+        }
+        else {
             Log.v("CartViewModel", "array is empty" );
             accumulator.add(product);
             cartProducts.setValue(accumulator);
@@ -84,17 +61,91 @@ public class CartViewModel extends ViewModel {
             Log.v("CartViewModel", String.valueOf(cartProducts.getValue().size()));
             Log.v("CartViewModel", "Done" );
             return false;
+        }*/
+
+        //TODO Redundancy Check
+
+        if (appendOrOverWrite.equals("overwrite")){
+
+            String allUsersWishListProductsString = SharedPrefs.read(SharedPrefs.CART_PRODUCTS, "");
+
+            if (!allUsersWishListProductsString.equals("")) {
+                HashMap<String, ArrayList<ProductModel>> allUsersWishLists = new Gson().fromJson(allUsersWishListProductsString,
+                        new TypeToken<HashMap<String, ArrayList<ProductModel>>>() {
+                        }.getType());
+
+                allUsersWishLists.put(SharedPrefs.USER_ID, products);
+                String updatedCartProducts = new Gson().toJson(allUsersWishLists);
+                SharedPrefs.write(SharedPrefs.CART_PRODUCTS, updatedCartProducts);
+
+            }
+            else {
+                HashMap<String, ArrayList<ProductModel>> newMap = new HashMap<>();
+                newMap.put(SharedPrefs.USER_ID, products);
+                String updatedCartProducts = new Gson().toJson(newMap);
+                SharedPrefs.write(SharedPrefs.CART_PRODUCTS, updatedCartProducts);
+            }
+
+            return true;
         }
+
+        else if (appendOrOverWrite.equals("append")) {
+            getAllCartProducts();
+            cartProducts.observeForever(new Observer<ArrayList<ProductModel>>() {
+                @Override
+                public void onChanged(ArrayList<ProductModel> productModels) {
+                    productModels.addAll(products);
+                    addToCart(productModels, "overwrite");
+
+                }
+            });
+            return true;
+        }
+return true;
+    }
+
+    public void getAllCartProducts(){
+
+        String allUsersWishListProductsString = SharedPrefs.read(SharedPrefs.CART_PRODUCTS, "");
+
+        if (!allUsersWishListProductsString.equals("")) {
+
+            HashMap<String, ArrayList<ProductModel>> allUsersWishLists = new Gson().fromJson(allUsersWishListProductsString,
+                    new TypeToken<HashMap<String, ArrayList<ProductModel>>>() {
+                    }.getType());
+
+            ArrayList<ProductModel> products = allUsersWishLists.get(SharedPrefs.USER_ID);
+
+            if (products != null && products.size() > 0) {
+                //ArrayList<ProductModel> products = new Gson().fromJson(productsString, new TypeToken<ArrayList<ProductModel>>(){}.getType());
+                cartProducts.setValue(products);
+            } else cartProducts.setValue(new ArrayList<>());
+        }
+
+        else cartProducts.setValue(new ArrayList<>());
+    }
+
+    public void deleteProductFromCart(ProductModel product){
+        String allUsersWishListProductsString = SharedPrefs.read(SharedPrefs.CART_PRODUCTS, "");
+
+        HashMap<String, ArrayList<ProductModel>> allUsersWishLists = new Gson().fromJson(allUsersWishListProductsString,
+                new TypeToken<HashMap<String, ArrayList<ProductModel>>>(){}.getType());
+
+
+        ArrayList<ProductModel> products = allUsersWishLists.get(SharedPrefs.USER_ID);
+
+        //products.remove(product); // makanetsh btemsa7 m3rf4 leh
+        for (int i = 0 ; i<products.size(); i++){
+            if (products.get(i).getCode().equals(product.getCode())){
+                products.remove(i);
+            }
+        }
+        //Overwrite
+        addToCart(products, "overwrite");
     }
 
 
-  /*  private void getAllCartProductsFromDataBase(Context context){
-        LocalDataBase localDataBase = LocalDataBase.getInstance(context);
-        Completable.fromRunnable(() -> {
-             localDataBase.mainDao().getAllCartProducts()
-                    ;
-        });
-
-
-    }*/
+  public MutableLiveData<ArrayList<ProductModel>> getCartProducts() {
+      return cartProducts;
+  }
 }

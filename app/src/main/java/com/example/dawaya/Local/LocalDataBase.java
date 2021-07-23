@@ -1,19 +1,22 @@
+/*
 package com.example.dawaya.Local;
 
 import android.content.Context;
 
 import androidx.room.Database;
-import androidx.room.Entity;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.dawaya.models.CartProductsTable;
-import com.example.dawaya.models.OrdersTable;
+import com.example.dawaya.models.ProductModel;
 
-@Database(entities = CartProductsTable.class, version = 2, exportSchema = false)
+import javax.inject.Singleton;
+*/
+
+/*@Database(entities = ProductModel.class, version = 4, exportSchema = false)
 public abstract class  LocalDataBase extends RoomDatabase {
 
     private static LocalDataBase instance;
+
 
     public abstract CartProductDao mainDao();
 
@@ -29,4 +32,4 @@ public abstract class  LocalDataBase extends RoomDatabase {
         }
         return instance;
     }
-}
+}*/

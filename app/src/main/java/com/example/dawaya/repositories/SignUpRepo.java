@@ -63,13 +63,16 @@ public class SignUpRepo {
 
         JSONObject body = new JSONObject();
         try {
-            body.put("credit", 10f);
+            body.put("credit", 10);
+            body.put("rate", 9);
             body.put("firstName", user.getFirstName());
             body.put("lastName", user.getLastName());
             body.put("email", user.getEmail());
             body.put("password", user.getPassword());
-            body.put("gender", user.getGender());
+            //body.put("gender", user.getGender());
+            body.put("gender", "m");
             //body.put("dateOfBirth", user.getDateOfBirth());
+            body.put("dateOfBirth", "1999-04-12");
         } catch (JSONException e) {
             e.printStackTrace();
         }

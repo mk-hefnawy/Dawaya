@@ -138,7 +138,7 @@ public class SubCategoriesAdapter extends BaseAdapter {
             ImageView catImage = (ImageView) view.findViewById(R.id.cat_image);
 
             catName.setText(subCategories.get(i).getCatName());
-            catImage.setImageResource(subCategories.get(i).getImageResourceId());
+            //Glide to load sub images
 
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

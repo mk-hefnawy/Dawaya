@@ -29,7 +29,7 @@ public class CategoryProductsViewModel extends ViewModel {
             @Override
             public void onChanged(ArrayList<ProductModel> productModels) {
                 products.setValue(productModels);
-                Log.v("From ViewModel", products.getValue().get(1).getName());
+                //Log.v("From ViewModel", products.getValue().get(1).getName());
             }
         });
     }

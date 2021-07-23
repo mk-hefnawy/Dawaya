@@ -19,19 +19,19 @@ import java.util.ArrayList;
 
 public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrdersViewHolder> {
 
-    ArrayList<OrderModel> peripherals = new ArrayList<>();
+    ArrayList<OrderModel> orders;
     ItemClickInterface anInterface;
     String notificationOrderId = "";
 
 
     // added another param to the constructor, the interface
-    public MyOrdersAdapter(ArrayList<OrderModel> peripherals , ItemClickInterface anInterface) {
-        this.peripherals  = peripherals ;
+    public MyOrdersAdapter(ArrayList<OrderModel> orders, ItemClickInterface anInterface) {
+        this.orders = orders;
         this.anInterface = anInterface;
     }
 
-    public MyOrdersAdapter(ArrayList<OrderModel> peripherals, ItemClickInterface anInterface, String notificationOrderId) {
-        this.peripherals = peripherals;
+    public MyOrdersAdapter(ArrayList<OrderModel> orders, ItemClickInterface anInterface, String notificationOrderId) {
+        this.orders = orders;
         this.anInterface = anInterface;
         this.notificationOrderId = notificationOrderId;
     }
@@ -46,10 +46,10 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
     public void onBindViewHolder(@NonNull MyOrdersViewHolder holder, int position) {
 
         if (!notificationOrderId.equals("")){
-            if (peripherals.get(position).getOrderId().equals(notificationOrderId)){
-                holder.orderTime.setText(peripherals .get(position).getOrderDate());
+            if (orders.get(position).getOrderId().equals(notificationOrderId)){
+                holder.orderTime.setText(orders.get(position).getOrderDate());
                 String str;
-                str = String.valueOf(peripherals .get(position).getOrderTotalPrice()) + " EGP";
+                str = String.valueOf(orders.get(position).getOrderTotalPrice()) + " EGP";
                 holder.orderTotalPrice.setText(str);
             }
             else {
@@ -64,11 +64,13 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
         }
         else {
         //Section Time
-        holder.orderTime.setText(peripherals .get(position).getOrderDate());
+        holder.orderTime.setText(orders.get(position).getOrderDate());
+        String orderIdText = "Order Id: " + orders.get(position).getOrderId();
+        holder.orderId.setText(orderIdText);
 
         //Section Price
         String str;
-        str = String.valueOf(peripherals .get(position).getOrderTotalPrice()) + " EGP";
+        str = String.valueOf(orders.get(position).getOrderTotalPrice()) + " EGP";
         holder.orderTotalPrice.setText(str);
     }}
     @Override
@@ -76,12 +78,12 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
         /*if (!notificationOrderId.equals("")){
             return 1;
         }*/
-        return peripherals.size();
+        return orders.size();
     }
 
      class MyOrdersViewHolder extends RecyclerView.ViewHolder {
 
-        TextView orderTime, orderTotalPrice, orderId, reOrder, rate;
+        TextView orderTime, orderTotalPrice, orderId, reOrder, rate, feedBack;
         ImageView orderImage;
         LinearLayout peripheralsView;
 
@@ -92,15 +94,18 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
             this.orderTime = itemView.findViewById(R.id.order_time);
             this.orderTotalPrice = itemView.findViewById(R.id.order_total_price);
             this.orderImage = itemView.findViewById(R.id.order_image);
+
             this.reOrder = itemView.findViewById(R.id.orders_reorder);
             this.rate = itemView.findViewById(R.id.order_rate);
             this.peripheralsView = itemView.findViewById(R.id.peripherals);
+            this.feedBack = itemView.findViewById(R.id.order_feedback);
 
             //Handling Click Action
             peripheralsView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    anInterface.onItemClick(peripherals.get(getAdapterPosition()).getOrderId());
+                    anInterface.onItemClick(orders.get(getAdapterPosition()), orders.get(getAdapterPosition()).getProducts().get(0).getCode(),
+                            0);
                 }
             });
 
@@ -109,13 +114,20 @@ public class MyOrdersAdapter extends RecyclerView.Adapter<MyOrdersAdapter.MyOrde
                 public void onClick(View view) {
 
                     //TODO el mafrod a2om fat7 saf7t el shipping bel ma3lomat elly fe el order el 2deem
-                    anInterface.onReOrderClicked(peripherals.get(getAdapterPosition()).getOrderId());
+                    anInterface.onReOrderClicked(orders.get(getAdapterPosition()).getOrderId());
                 }
             });
             rate.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    anInterface.onRateClicked(peripherals.get(getAdapterPosition()).getOrderId());
+                    anInterface.onRateClicked(orders.get(getAdapterPosition()).getOrderId());
+                }
+            });
+
+            feedBack.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    anInterface.onFeedbackClicked(orders.get(getAdapterPosition()).getOrderId());
                 }
             });
         }

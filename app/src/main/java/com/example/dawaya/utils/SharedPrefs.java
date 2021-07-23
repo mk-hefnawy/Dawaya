@@ -22,6 +22,10 @@ public class SharedPrefs {
     public final static String DATE_OF_BIRTH = "DATE_OF_BIRTH";
     public final static String ADDRESS = "ADDRESS";
 
+
+    public final static String CART_PRODUCTS = "CART";
+    public final static String WISH_LIST_PRODUCTS = "WISH";
+
     private SharedPrefs(){} // empty Constructor
 
     // Singleton approach

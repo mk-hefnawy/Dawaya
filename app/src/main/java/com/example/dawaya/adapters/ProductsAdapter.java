@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.dawaya.R;
 import com.example.dawaya.interfaces.CartInterface;
 import com.example.dawaya.interfaces.ProductsInterface;
@@ -24,6 +25,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     ArrayList<ProductModel> products;
     ProductsInterface productsInterface;
     Boolean isCartProduct = false;
+    Boolean isPrescriptionProduct = false;
 
     public ProductsAdapter(ArrayList<ProductModel> products, Boolean isCartProduct) {
         this.products = products;
@@ -34,6 +36,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public ProductsAdapter(ArrayList<ProductModel> products, ProductsInterface productsInterface) {
         this.products = products;
         this.productsInterface = productsInterface;
+    }
+
+    public ProductsAdapter(ArrayList<ProductModel> products, Boolean isCartProduct, ProductsInterface productsInterface) {
+        this.products = products;
+        this.isCartProduct = isCartProduct;
+        this.productsInterface = productsInterface;
+    }
+
+    public ProductsAdapter(ArrayList<ProductModel> products, Boolean isCartProduct ,Boolean isPrescriptionProduct) {
+        this.products = products;
+        this.isPrescriptionProduct = isPrescriptionProduct;
+        this.isCartProduct = isCartProduct;
     }
 
     @NonNull
@@ -48,6 +62,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
     public void onBindViewHolder(@NonNull ProductsViewHolder holder, int position) {
         holder.productName.setText(products.get(position).getName());
         holder.productPrice.setText(String.valueOf(products.get(position).getPrice()));
+
+        if (isPrescriptionProduct) {
+            holder.favBtn.setVisibility(View.GONE);
+            holder.checkBtn.setVisibility(View.VISIBLE);
+            holder.quantityContainer.setVisibility(View.GONE);
+        }
+
+        if (products.get(position).getImageUrl() != null && !products.get(position).getImageUrl().equals("")){
+            Glide.with(holder.itemView.getContext()).load(products.get(position).getImageUrl())
+                    .into((holder.productImage));
+        }
+
         if (products.get(position).getQuantity() == 0) {
             holder.productQuantity.setText(R.string.out_of_stock);
             holder.productQuantity.setTextColor(Color.parseColor("#BD2032"));
@@ -59,14 +85,17 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
 
     @Override
     public int getItemCount() {
+        if (products.isEmpty()){
+            return 0;
+        }
         return products.size();
     }
 
     class ProductsViewHolder extends RecyclerView.ViewHolder{
         TextView productName, productPrice, productQuantity, quantity;
         Button addToCartBtn;
-        ImageView increaseQuantity, decreaseQuantity;
-        LinearLayout quantityContainer;
+        ImageView increaseQuantity, decreaseQuantity, productImage, checkBtn, favBtn;
+        LinearLayout quantityContainer, productContainer;
 
         public ProductsViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -78,32 +107,44 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             quantity = itemView.findViewById(R.id.quantity_text_view);
             increaseQuantity = itemView.findViewById(R.id.increase_quantity);
             decreaseQuantity = itemView.findViewById(R.id.decrease_quantity);
+            productImage = itemView.findViewById(R.id.product_image);
 
             quantityContainer = itemView.findViewById(R.id.cart_quantity_container);
+            productContainer = itemView.findViewById(R.id.product_container);
+            checkBtn = itemView.findViewById(R.id.check_btn);
+            favBtn = itemView.findViewById(R.id.fav_btn);
 
-            addToCartBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    productsInterface.onAddToCartClicked(products.get(getAdapterPosition()).getCode());
-                }
+
+            favBtn.setOnClickListener(view -> {
+                productsInterface.onFavouriteClicked(products.get(getAdapterPosition()));
             });
 
-            increaseQuantity.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int currentQuantity = Integer.parseInt(quantity.getText().toString());
-                    quantity.setText(String.valueOf(currentQuantity+ 1));
-                    products.get(getAdapterPosition()).setQuantityToBuy(currentQuantity+ 1);
-                }
+            addToCartBtn.setOnClickListener(view -> productsInterface.onAddToCartClicked(products.get(getAdapterPosition())));
+
+            increaseQuantity.setOnClickListener(view -> {
+                int currentQuantity = Integer.parseInt(quantity.getText().toString());
+                quantity.setText(String.valueOf(currentQuantity+ 1));
+                products.get(getAdapterPosition()).setQuantityToBuy(currentQuantity+ 1);
             });
 
-            decreaseQuantity.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int currentQuantity = Integer.parseInt(quantity.getText().toString());
-                    quantity.setText(String.valueOf(currentQuantity - 1));
-                    products.get(getAdapterPosition()).setQuantityToBuy(currentQuantity - 1);
-                }
+            decreaseQuantity.setOnClickListener(view -> {
+                int currentQuantity = Integer.parseInt(quantity.getText().toString());
+                quantity.setText(String.valueOf(currentQuantity - 1));
+                products.get(getAdapterPosition()).setQuantityToBuy(currentQuantity - 1);
+            });
+
+            productContainer.setOnClickListener(view -> {
+            if (checkBtn.getTag().equals("checked")){
+                checkBtn.setTag("unchecked");
+                checkBtn.setImageResource(R.drawable.outline_radio_button_unchecked_black_36);
+                products.get(getAdapterPosition()).setCheckedInPrescriptionProducts(false);
+            }
+            else {
+                checkBtn.setTag("checked");
+                checkBtn.setImageResource(R.drawable.outline_check_circle_black_36);
+                products.get(getAdapterPosition()).setCheckedInPrescriptionProducts(true);
+            }
+
             });
 
             if (isCartProduct) {

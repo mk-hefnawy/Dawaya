@@ -2,15 +2,12 @@ package com.example.dawaya.models;
 
 public class CategoryModel {
     String catName;
-    int imageResourceId;
+    String imageUrl;
 
 
-
-
-
-    public CategoryModel(String catName, int imageResourceId) {
+    public CategoryModel(String catName, String imageUrl) {
         this.catName = catName;
-        this.imageResourceId = imageResourceId;
+        this.imageUrl = imageUrl;
     }
 
     public String getCatName() {
@@ -20,12 +17,11 @@ public class CategoryModel {
         this.catName = catName;
     }
 
-    public int getImageResourceId() {
-        return imageResourceId;
-    }
-    public void setImageResourceId(int imageResourceId) {
-        this.imageResourceId = imageResourceId;
-    }
 
-
+    public String getImageUrl() {
+        return imageUrl;
+    }
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

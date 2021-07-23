@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:background="@drawable/rounded_corners"
+    android:layout_margin="@dimen/_10sdp"
+    >
+    
+    <TextView
+        android:id="@+id/add_prescription_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:text="@string/add_prescription"
+        android:textSize="@dimen/_20sdp"
+        android:textColor="@color/sky"
+
+       android:layout_marginTop="@dimen/_10sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_1sdp"
+
+        android:backgroundTint="@color/sky"
+        />
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/_15sdp">
+
+        <ImageView
+            android:id="@+id/prescription_use_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="@dimen/_10sdp"
+            android:src="@drawable/outline_add_a_photo_black_36"
+            />
+
+        <ImageView
+            android:id="@+id/prescription_use_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_margin="@dimen/_10sdp"
+            android:src="@drawable/outline_collections_black_36"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/add_prescription_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+
+        android:text="@string/cancel"
+        android:textSize="@dimen/_15sdp"
+        android:gravity="center"
+        />
+
+
+</LinearLayout>

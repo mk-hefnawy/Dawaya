@@ -71,7 +71,8 @@ public class ChosenCategoryRepo {
                     }
                     for (int i = 0; i < jsonArray.length(); i++) {
                         jsonObject = jsonArray.getJSONObject(i);
-                        arrayList.add(new ProductModel("677tf",jsonObject.getString("Fisrt_cata"),jsonObject.getString("secand_cata"),jsonObject.getString("product_name") ,5.0,5));
+                        /*arrayList.add(new ProductModel("677tf", jsonObject.getString("product_name"), jsonObject.getString("Fisrt_cata"),jsonObject.getString("secand_cata"),
+                                10.0,5,"",""));*/
 
                     }
                     // Log.v("---------", arrayList.get(1).getOrderTotalPrice().toString());

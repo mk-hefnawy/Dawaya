@@ -75,7 +75,7 @@ public class SubCategoriesActivity extends AppCompatActivity implements SubCateg
 
         //Notice the number of sub categories is not known
         for (int i=0; i<categoriesNames.size(); i++) {
-            categories.add(new CategoryModel(categoriesNames.get(i), R.mipmap.drug_img));
+            //categories.add(new CategoryModel(categoriesNames.get(i), R.mipmap.drug_img));  // urls instead of mipmap
 
         /*categories.add(new CategoryModel(categoriesNames.get(2), R.mipmap.drug_img));
         categories.add(new CategoryModel(categoriesNames.get(3), R.mipmap.man));*/

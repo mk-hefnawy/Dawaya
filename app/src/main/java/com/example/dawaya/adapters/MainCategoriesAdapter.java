@@ -5,8 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.bumptech.glide.Glide;
 import com.example.dawaya.R;
 import com.example.dawaya.interfaces.HomeItemClickInterface;
 import com.example.dawaya.interfaces.ItemClickInterface;
@@ -14,7 +19,7 @@ import com.example.dawaya.models.CategoryModel;
 
 import java.util.ArrayList;
 
-public class MainCategoriesAdapter extends BaseAdapter {
+public class MainCategoriesAdapter extends RecyclerView.Adapter<MainCategoriesAdapter.ViewHolder> {
     ArrayList<CategoryModel> categories;
     HomeItemClickInterface itemClickInterface;
 
@@ -23,41 +28,46 @@ public class MainCategoriesAdapter extends BaseAdapter {
         this.itemClickInterface = itemClickInterface;
     }
 
+    @NonNull
     @Override
-    public int getCount() {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.categories_grid_item, parent, false);
+        return new ViewHolder(itemView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        holder.catName.setText(categories.get(position).getCatName());
+        Glide.with(holder.itemView.getContext()).load(categories.get(position).getImageUrl())
+                .into(holder.catImageView);
+    }
+
+    @Override
+    public int getItemCount() {
         return categories.size();
     }
 
-    @Override
-    public Object getItem(int i) {
-        return i;
-    }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        TextView catName;
+        ImageView catImageView;
+        LinearLayout categoryContainer;
 
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        if (view == null){
-            view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.categories_grid_item, viewGroup,false);
 
-            TextView catName = (TextView) view.findViewById(R.id.cat_name);
-            ImageView catImage = (ImageView) view.findViewById(R.id.cat_image);
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
 
-            catName.setText(categories.get(i).getCatName());
-            catImage.setImageResource(categories.get(i).getImageResourceId());
+            catName = itemView.findViewById(R.id.cat_name);
+            catImageView = itemView.findViewById(R.id.cat_image);
+            categoryContainer = itemView.findViewById(R.id.category_container);
 
-            view.setOnClickListener(new View.OnClickListener() {
+            categoryContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    itemClickInterface.onItemClicked(categories.get(i).getCatName());
+                    itemClickInterface.onItemClicked(categories.get(getAdapterPosition()).getCatName());
                 }
             });
         }
-
-
-        return view;
     }
 }

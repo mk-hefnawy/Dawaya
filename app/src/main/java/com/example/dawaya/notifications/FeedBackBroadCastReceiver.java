@@ -21,7 +21,7 @@ import com.example.dawaya.ui.MyOrdersActivity;
 
 public class FeedBackBroadCastReceiver extends BroadcastReceiver {
     public static String NOTIFICATION_ID = "NotificationId" ;
-    public static String NOTIFICATION_BUILDER = "TheNotificationBuilder" ;
+
 
     NotificationCompat.Builder notificationBuilder;
     String notificationId;
@@ -53,7 +53,7 @@ public class FeedBackBroadCastReceiver extends BroadcastReceiver {
         stackBuilder.addParentStack(MyOrdersActivity.class);
         stackBuilder.addNextIntent(onNotificationClickedIntent);
 
-        notificationId = intent.getStringExtra("NotificationId");
+        notificationId = intent.getStringExtra(NOTIFICATION_ID);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0,PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
 
@@ -73,7 +73,7 @@ public class FeedBackBroadCastReceiver extends BroadcastReceiver {
         builder.setContentTitle(notificationTitle);
         builder.setContentText(notificationBody);
         builder.setVibrate(new long[] { 500, 1000, 5000, 1000, 500 });
-        builder.setSmallIcon(R.drawable.outline_notifications_24);
+        builder.setSmallIcon(R.drawable.outline_notifications_black_36);
         builder.setAutoCancel(true);
         builder.setChannelId(channelId);
         return builder;

@@ -95,7 +95,7 @@
     <string name="products">Products</string>
     <string name="place_order">Place Order</string>
     <string name="cancel">Cancel</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
     <string name="edit_address">Edit Address</string>
     <string name="delete_this_address">Delete this address?</string>
     <string name="no">No</string>
@@ -118,6 +118,11 @@
     <string name="online">Online</string>
     <string name="edit_phone_numbers">Edit Phone Numbers</string>
     <string name="add_phone_number">Add Phone Number</string>
+    <string name="e_prescription">E-Prescription</string>
+    <string name="add_prescription">Add Prescription</string>
+    <string name="get_it_now">Get it Now!</string>
+    <string name="tell_us_your_feedback">Tell us your feedback</string>
+    <string name="feedback_hint">Ex: You have great service, Thank you</string>
 
 
     <string-array name="main_menu_items_array">

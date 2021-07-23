@@ -6,6 +6,9 @@
     <!-- Added action SEARCH to HomeActivity -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA"/>
+
 
     <application
         android:name=".utils.App"
@@ -17,13 +20,27 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
-        <activity android:name=".ui.ChatBotActivity"></activity>
+
+        <provider
+
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.dawaya.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            >
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/image_file_path_in_device" />
+        </provider>
+
+        <activity android:name=".ui.RemindersActivity" />
+        <activity android:name=".ui.ChatBotActivity" />
         <activity android:name=".ui.WebScrapingActivity" />
         <activity android:name=".ui.PhoneNumbersActivity" />
         <activity android:name=".ui.ShippingActivity" />
-        <activity android:name=".ui.WishlistActivity" />
+        <activity android:name=".ui.WishListActivity" />
         <activity android:name=".ui.CartActivity" />
-        <activity android:name=".ui.PrescriptionActivity" />
+        <activity android:name=".ui.PrescriptionActivity"/>
         <activity android:name=".ui.SubCategoriesActivity" />
         <activity android:name=".ui.SettingsActivity" />
         <activity
@@ -47,7 +64,7 @@
         </activity>
         <activity
             android:name=".ui.SignInActivity"
-            android:noHistory="true"></activity>
+            android:noHistory="true" />
         <activity
             android:name=".ui.SignUpActivity"
             android:noHistory="true" />

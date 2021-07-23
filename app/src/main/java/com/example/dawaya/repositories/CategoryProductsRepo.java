@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.android.volley.NoConnectionError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -42,23 +43,50 @@ public class CategoryProductsRepo {
 
     public void sendCategoryProductsRequest(String mainCategory, String subCategory){
 
-        String url = new URLs().getProductsByCategoryURL;
-        url += "?sub_category+" + subCategory;
+        String url = URLs.getProductsByCategoryURL;
+        url += "/" + mainCategory + "/" + subCategory;
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    JSONArray jsonArray = jsonObject.getJSONArray("products");
-                    JSONObject productJsonObject;
-                    ArrayList<ProductModel> arrayList = new ArrayList<>();
-                    for (int i=0 ; i<jsonArray.length(); i++){
-                        productJsonObject = jsonArray.getJSONObject(i);
-                        arrayList.add(new ProductModel(productJsonObject.getString("product_code"),productJsonObject.getString("name"),
-                                productJsonObject.getDouble("unit_price"),productJsonObject.getInt("quantity")));
+                    JSONArray jsonArrayResponse = new JSONArray(response);
+                    JSONObject jsonProduct;
+                    ProductModel product;
+                    JSONArray supplyProducts;
+                    JSONObject supplyProduct;
+
+                    ArrayList<ProductModel> products = new ArrayList<>();
+
+                    for (int i = 0 ; i<jsonArrayResponse.length() ; i++){
+                        jsonProduct = jsonArrayResponse.getJSONObject(i);
+                        // Populate the product model with products table info first
+                        product = new ProductModel(jsonProduct.getString("code"), jsonProduct.getString("name"),
+                                jsonProduct.getString("mainCategory"),jsonProduct.getString("secondaryCategory"),
+                                jsonProduct.getString("position"), "");
+
+                        supplyProducts = jsonProduct.getJSONArray("supplyProducts");
+                        supplyProduct = supplyProducts.getJSONObject(0);
+
+                        Double price = supplyProduct.getDouble("productPrice");
+                        int quantity = supplyProduct.getInt("remainedQuantity");
+
+                        //Adding price and quantity
+                        product.setPrice(price);
+                        product.setQuantity(quantity);
+
+                        JSONObject id = supplyProduct.getJSONObject("id");
+
+                        String companyId = id.getString("companyId");
+                        String supplyId = id.getString("supplyId");
+
+                        product.setCompanyId(companyId);
+                        product.setSupplyId(supplyId);
+
+                        products.add(product);
                     }
-                    productsLiveData.setValue(arrayList);
-                    Log.v("From Repo", productsLiveData.getValue().get(1).getName());
+
+                    productsLiveData.setValue(products);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -68,6 +96,7 @@ public class CategoryProductsRepo {
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(context, "Something went wrong", Toast.LENGTH_SHORT).show();
                 error.printStackTrace();
+
             }
         });
 
