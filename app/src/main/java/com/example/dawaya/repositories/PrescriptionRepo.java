@@ -1,9 +1,11 @@
 package com.example.dawaya.repositories;
 
 import android.content.Context;
+import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.MutableLiveData;
 
 import com.android.volley.Request;
@@ -14,6 +16,7 @@ import com.example.dawaya.models.PrescriptionModel;
 import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.responses.UploadPrescriptionResponse;
 import com.example.dawaya.utils.App;
+import com.example.dawaya.utils.SharedPrefs;
 import com.example.dawaya.utils.URLs;
 import com.example.dawaya.utils.Utils;
 
@@ -22,7 +25,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -50,7 +55,7 @@ public class PrescriptionRepo {
     }
 
 
-    public void uploadPrescription(File imageFile, String userId) {
+    public void uploadPrescriptionImage(File imageFile) {
         String baseUrl = URLs.postPrescription;
         Retrofit retrofit = Utils.getRetrofitInstance(baseUrl);
 
@@ -66,11 +71,10 @@ public class PrescriptionRepo {
             @Override
             public void onResponse(Call<UploadPrescriptionResponse> call, Response<UploadPrescriptionResponse> response) {
 
-                String prescriptionImageUrl = response.body().getPrescriptionId();
+                //String prescriptionImageUrl = response.body().getURL().getBody();
+                String prescriptionImageUrl = response.body().getURL().getBody();
 
-                /*Log.v("onResponse", response.body().getPrescriptionId());
-                String prescriptionId = response.body().getPrescriptionId();
-                getPrescriptionProducts(prescriptionId);*/
+                Log.v("PrescriptionUrl", prescriptionImageUrl);
             }
 
             @Override
@@ -80,6 +84,34 @@ public class PrescriptionRepo {
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createNewPrescription(String prescriptionImageUrl){
+        String url = URLs.createPrescription;
+
+        JSONObject body = new JSONObject();
+
+        try {
+            body.put("sentTime", LocalDateTime.now());
+            body.put("status", "pending");
+            body.put("url", prescriptionImageUrl);
+            body.put("customerId", Integer.parseInt(SharedPrefs.read(SharedPrefs.USER_ID, "0")));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, url, body,
+                response -> {
+                    try {
+                        if (response.getInt("status") == 1){
+                            int prescriptionId = response.getInt("prescription_id");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                },
+                error -> {});
     }
 
     private void getPrescriptionProducts(String prescriptionId) {

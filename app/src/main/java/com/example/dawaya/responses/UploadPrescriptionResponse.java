@@ -2,13 +2,17 @@ package com.example.dawaya.responses;
 
 public class UploadPrescriptionResponse {
 
-    String prescriptionImageUrl;
+   URL URL;
 
-    public String getPrescriptionId() {
-        return prescriptionImageUrl;
+    public UploadPrescriptionResponse(com.example.dawaya.responses.URL URL) {
+        this.URL = URL;
     }
 
-    public void setPrescriptionId(String prescriptionImageUrl) {
-        this.prescriptionImageUrl = prescriptionImageUrl;
+    public com.example.dawaya.responses.URL getURL() {
+        return URL;
+    }
+
+    public void setURL(com.example.dawaya.responses.URL URL) {
+        this.URL = URL;
     }
 }

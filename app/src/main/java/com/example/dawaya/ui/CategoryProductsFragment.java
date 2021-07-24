@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,7 +32,6 @@ public class CategoryProductsFragment extends Fragment implements ProductsInterf
 
     Context context = App.getAppContext();
 
-
     RecyclerView productsRecyclerView;
     ProductsAdapter adapter;
     ArrayList<ProductModel> products = new ArrayList<>();
@@ -39,18 +39,13 @@ public class CategoryProductsFragment extends Fragment implements ProductsInterf
     CategoryProductsViewModel viewModel;
     CartViewModel cartViewModel = CartViewModel.getInstance();
     WishListViewModel wishListViewModel;
-    //SubCategpryClickInterface anInterface;
 
     String mainCategory;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -64,19 +59,23 @@ public class CategoryProductsFragment extends Fragment implements ProductsInterf
         mainCategory = getArguments().getString("mainCategory");
         String subCategory = getArguments().getString("subCategory");
 
-        //Log.v("From Fragment", products.get(1).getName());
-
-        productsRecyclerView = view.findViewById(R.id.category_products_fragment_recyclerview);
-        productsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
-        adapter = new ProductsAdapter(products, this);
-        productsRecyclerView.setAdapter(adapter);
+        viewModel.getCategoryProducts(mainCategory, subCategory);
+        observeViewModelLiveData(view);
 
         return view;
     }
 
-
-    public void setProducts(ArrayList<ProductModel> products) {
-        this.products = products;
+    private void observeViewModelLiveData(View view) {
+        viewModel.getProducts().observe(getViewLifecycleOwner(), new Observer<ArrayList<ProductModel>>() {
+            @Override
+            public void onChanged(ArrayList<ProductModel> productModels) {
+                products = productModels;
+                productsRecyclerView = view.findViewById(R.id.category_products_fragment_recyclerview);
+                productsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+                adapter = new ProductsAdapter(products, CategoryProductsFragment.this);
+                productsRecyclerView.setAdapter(adapter);
+            }
+        });
     }
 
     @Override

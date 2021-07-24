@@ -44,6 +44,7 @@ public class CategoryProductsRepo {
     public void sendCategoryProductsRequest(String mainCategory, String subCategory){
 
         String url = URLs.getProductsByCategoryURL;
+        //url += "/" + mainCategory + "/" + subCategory;
         url += "/" + mainCategory + "/" + subCategory;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -66,24 +67,29 @@ public class CategoryProductsRepo {
                                 jsonProduct.getString("position"), "");
 
                         supplyProducts = jsonProduct.getJSONArray("supplyProducts");
-                        supplyProduct = supplyProducts.getJSONObject(0);
+                        if (supplyProducts != null  && supplyProducts.length() > 0){
+                            supplyProduct = supplyProducts.getJSONObject(0);
 
-                        Double price = supplyProduct.getDouble("productPrice");
-                        int quantity = supplyProduct.getInt("remainedQuantity");
+                            Double price = supplyProduct.getDouble("productPrice");
+                            int quantity = supplyProduct.getInt("remainedQuantity");
 
-                        //Adding price and quantity
-                        product.setPrice(price);
-                        product.setQuantity(quantity);
+                            //Adding price and quantity
+                            product.setPrice(price);
+                            product.setQuantity(quantity);
 
-                        JSONObject id = supplyProduct.getJSONObject("id");
+                            JSONObject id = supplyProduct.getJSONObject("id");
 
-                        String companyId = id.getString("companyId");
-                        String supplyId = id.getString("supplyId");
+                            String companyId = id.getString("companyId");
+                            String supplyId = id.getString("supplyId");
 
-                        product.setCompanyId(companyId);
-                        product.setSupplyId(supplyId);
+                            product.setCompanyId(companyId);
+                            product.setSupplyId(supplyId);
 
-                        products.add(product);
+                            products.add(product);
+                        }
+
+
+
                     }
 
                     productsLiveData.setValue(products);

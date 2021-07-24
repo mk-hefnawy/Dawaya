@@ -57,7 +57,7 @@ public class ShippingRepo {
         JSONObject body = new JSONObject();
         try {
             //Integer.parseInt(SharedPrefs.read(SharedPrefs.USER_ID, ""))
-            body.put("customerId", 7);
+            body.put("customerId", 197);
             body.put("customerAddress", "masr al gadeda,al khalefa al maamon, 11, 3, 33");
             body.put("totalPrice", totalPrice);
             body.put("time", "2021-04-12T15:00:00.000+00:00");
@@ -65,7 +65,7 @@ public class ShippingRepo {
             body.put("billType", "mobile");
             body.put("billState", "on_HOLD");
             body.put("deliveryFee", 1.0);
-            //body.put("phoneNumber", 15236511);
+            body.put("phoneNumber", Integer.parseInt("01153228745"));
             body.put("deliveryFeedback", 0);
             body.put("employeeFeedback", 0);
             body.put("pharmacyFeedback", 0);

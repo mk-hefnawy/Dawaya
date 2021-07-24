@@ -85,7 +85,7 @@ public class PrescriptionActivity extends AppCompatActivity implements Prescript
 
 
         // Getting all prescriptions
-        viewModel.getAllPrescriptions();
+       /* viewModel.getAllPrescriptions();
         viewModel.getPrescriptionsLiveData().observe(this, new Observer<ArrayList<PrescriptionModel>>() {
             @Override
             public void onChanged(ArrayList<PrescriptionModel> prescriptionModels) {
@@ -95,7 +95,7 @@ public class PrescriptionActivity extends AppCompatActivity implements Prescript
 
                 adapter.notifyDataSetChanged();
             }
-        });
+        });*/
 
 
 
@@ -303,7 +303,7 @@ public class PrescriptionActivity extends AppCompatActivity implements Prescript
             @Override
             public void onChanged(ArrayList<ProductModel> products) {
                 System.out.println("ProductsArrived");
-                insertProductsIntoTheAdapter(products);
+                //insertProductsIntoTheAdapter(products);
             }
         });
     }

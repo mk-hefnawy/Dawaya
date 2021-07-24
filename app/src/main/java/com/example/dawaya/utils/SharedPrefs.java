@@ -12,7 +12,7 @@ public class SharedPrefs {
 
     //Notice when initializing these strings with "" ((same value for each)) it makes all of them as the value of the last one when reading
     public final static String PREF_NAME = "MyPreference";
-    public final static String USER_ID = "USER_ID";
+    public final static String USER_ID = "0";
     public final static String FIRST_NAME = "FIRST_NAME";
     public final static String LAST_NAME = "LAST_NAME";
     public final static String EMAIL = "EMAIL";

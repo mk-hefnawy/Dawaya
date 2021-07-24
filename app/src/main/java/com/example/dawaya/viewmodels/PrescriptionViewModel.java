@@ -1,6 +1,5 @@
 package com.example.dawaya.viewmodels;
 
-import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
@@ -12,7 +11,6 @@ import com.example.dawaya.models.ProductModel;
 import com.example.dawaya.repositories.PrescriptionRepo;
 import com.example.dawaya.repositories.SearchRepo;
 import com.example.dawaya.utils.SharedPrefs;
-import com.example.dawaya.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,8 +31,8 @@ public class PrescriptionViewModel extends ViewModel {
 
     public void uploadPrescription(File imageFile){
         Log.v("------", imageFile.getPath());
-        repo.uploadPrescription(imageFile, SharedPrefs.read(SharedPrefs.USER_ID, " "));
-        observePrescriptionProducts();
+        repo.uploadPrescriptionImage(imageFile);
+        //observePrescriptionProducts();
     }
 
     private void observePrescriptionProducts() {

@@ -13,6 +13,6 @@ import retrofit2.http.Part;
 public interface ImageUploadInterface {
 
     @Multipart
-    @POST("upload/")
+    @POST("/blob/upload")
     public Call<UploadPrescriptionResponse> uploadImage(@Part MultipartBody.Part image);
 }

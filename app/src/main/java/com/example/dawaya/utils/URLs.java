@@ -41,7 +41,7 @@ public class URLs {
     public static String updatePhoneNumbersUrl = "https://pharmacy-management-system.azurewebsites.net/customerphone/editphone";
     public static String deletePhoneNumbersUrl = "https://pharmacy-management-system.azurewebsites.net/customerphone/delete_phone_by_id";
 
-    public static String getProductsByCategoryURL = "https://pharmacy-management-system.azurewebsites.net/products/products_category_search//";
+    public static String getProductsByCategoryURL = "https://pharmacy-management-system.azurewebsites.net/products/products_category_search";
 
 
     public static String putPassword = "";
@@ -56,7 +56,8 @@ public class URLs {
 
     //public static String postPrescription = "http://192.168.1.104:4444/ImageUpload/upload.php";
     //public static String postPrescription = "https://b68ab667-18bb-4ab9-bfe7-97843785619b.mock.pstmn.io/";
-    public static String postPrescription = "https://pharmacy-management-system.azurewebsites.net/blob/";
+    public static String postPrescription = "https://pharmacy-management-system.azurewebsites.net/";
+    public static String createPrescription = "https://pharmacy-management-system.azurewebsites.net/customersPrescripts/add_new";
 
 
     public static String getPrescriptionProducts = "https://b68ab667-18bb-4ab9-bfe7-97843785619b.mock.pstmn.io/getPrescriptionProducts";

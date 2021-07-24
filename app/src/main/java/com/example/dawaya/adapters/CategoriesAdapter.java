@@ -3,7 +3,6 @@ package com.example.dawaya.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -14,19 +13,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.dawaya.R;
 import com.example.dawaya.interfaces.HomeItemClickInterface;
-import com.example.dawaya.interfaces.ItemClickInterface;
 import com.example.dawaya.models.CategoryModel;
 
 import java.util.ArrayList;
 
-public class MainCategoriesAdapter extends RecyclerView.Adapter<MainCategoriesAdapter.ViewHolder> {
+public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.ViewHolder> {
     ArrayList<CategoryModel> categories;
     HomeItemClickInterface itemClickInterface;
 
-    public MainCategoriesAdapter(ArrayList<CategoryModel> categories, HomeItemClickInterface itemClickInterface) {
+
+    public CategoriesAdapter(ArrayList<CategoryModel> categories, HomeItemClickInterface itemClickInterface) {
         this.categories = categories;
         this.itemClickInterface = itemClickInterface;
     }
+
 
     @NonNull
     @Override
@@ -66,6 +66,7 @@ public class MainCategoriesAdapter extends RecyclerView.Adapter<MainCategoriesAd
                 @Override
                 public void onClick(View view) {
                     itemClickInterface.onItemClicked(categories.get(getAdapterPosition()).getCatName());
+
                 }
             });
         }

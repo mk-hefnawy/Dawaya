@@ -36,22 +36,10 @@ public class ExampleUnitTest {
     }
 
     @Test
-    public void testGson(){
-        ProductModel productModel = new ProductModel("code", "name",
-        "mainCategory", "secondaryCategory",
-                10.0, 10, "", "");
+    public void testLocaleDate() {
+
+        System.out.println(LocalDateTime.now());
 
 
-        String productString = new Gson().toJson(productModel);
-        System.out.println(productString);
-
-        ProductModel product = new Gson().fromJson(productString, ProductModel.class);
-        System.out.println("ProductName" + " " + product.getName());
     }
-
-
-
-
-
-
 }

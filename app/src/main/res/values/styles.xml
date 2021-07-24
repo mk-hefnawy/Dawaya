@@ -11,6 +11,7 @@
         <item name="colorPrimary">#494A4A</item>
         <item name="colorPrimaryDark">@android:color/tab_indicator_text</item>
         <item name="colorAccent">#494A4A</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
     <style name="ButtonsTheme">
